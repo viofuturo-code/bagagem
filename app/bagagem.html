@@ -581,6 +581,7 @@
         <div class="anexo-strip" id="anexos">
           <button type="button" class="btn-ghost btn-tiny" id="btn-foto">+ Foto</button>
         </div>
+        <p class="helper" id="nota-fotos" hidden></p>
         <input type="file" id="file-input" accept="image/*" multiple hidden>
 
         <button type="button" class="btn-primary" id="btn-guardar">Guardar na mala</button>
@@ -790,6 +791,17 @@
       d.appendChild(b);
       strip.insertBefore(d, $("btn-foto"));
     });
+
+    // O CLAUDE.md pede até 10 fotos por vivência, descritas uma vez. Passar
+    // muito disso encarece a destilação depois.
+    var nota = $("nota-fotos");
+    if (state.anexos.length > 10) {
+      nota.hidden = false;
+      nota.textContent = state.anexos.length + " fotos. O sistema trabalha melhor com até 10 por vivência, " +
+        "porque cada uma é descrita na destilação. Vale escolher as que contam a história.";
+    } else {
+      nota.hidden = true;
+    }
   }
 
   /* ---------------- guardar ---------------- */
@@ -950,42 +962,67 @@
 
   /* ---------------- a mala ---------------- */
 
-  function carregarMala() {
+  function falhaMala(msg) {
     var alvo = $("lista-mala");
+    alvo.innerHTML = "";
+    var p = document.createElement("div");
+    p.className = "vazio";
+    p.innerHTML = "<p>Não consegui abrir a mala.</p>";
+    var d = document.createElement("p");
+    d.style.fontSize = "13px";
+    d.textContent = msg;
+    p.appendChild(d);
+    alvo.appendChild(p);
+  }
+
+  function carregarMala() {
     if (!state.db) {
-      alvo.innerHTML = "";
-      var p = document.createElement("div");
-      p.className = "vazio";
-      p.textContent = "Não consegui abrir o guardado nesta tela.";
-      alvo.appendChild(p);
+      falhaMala("A página não conseguiu se conectar ao guardado. Recarregue.");
       return;
     }
 
-    var abertas = state.vivencias.filter(function (v) { return v.status !== "desfeita"; });
-    if (abertas.length === 0) { renderMala([]); return; }
+    // Relê a lista na hora em vez de confiar no estado da inscrição: se o
+    // snapshot não tiver chegado, a mala mostrava vazio como se não houvesse nada.
+    state.db.collection("vivencias").limit(300).get()
+      .then(function (snap) {
+        var abertas = snap.docs
+          .map(function (d) {
+            var data = d.data() || {};
+            data.pasta = data.pasta || d.id;
+            return data;
+          })
+          .filter(function (v) { return v.status !== "desfeita"; });
 
-    Promise.all(abertas.map(function (v) {
-      return state.db.collection("vivencias/" + v.pasta + "/capturas")
-        .orderBy("criadaEm", "asc").limit(200).get()
-        .then(function (snap) {
-          return {
-            viv: v,
-            caps: snap.docs.map(function (d) {
-              var data = d.data() || {};
-              data.__id = d.id;
-              return data;
+        if (abertas.length === 0) { renderMala([]); return null; }
+
+        return Promise.all(abertas.map(function (v) {
+          return state.db.collection("vivencias/" + v.pasta + "/capturas").limit(300).get()
+            .then(function (s) {
+              var caps = s.docs.map(function (d) {
+                var data = d.data() || {};
+                data.__id = d.id;
+                return data;
+              });
+              caps.sort(function (a, b) {
+                return (a.criadaEm || "").localeCompare(b.criadaEm || "");
+              });
+              return { viv: v, caps: caps };
             })
-          };
-        })
-        .catch(function () { return { viv: v, caps: [] }; });
-    })).then(renderMala);
+            .catch(function (e) {
+              // Uma vivência ilegível não pode esconder as outras, mas também
+              // não some em silêncio: entra na lista marcada.
+              return { viv: v, caps: [], erro: mensagemErro(e) };
+            });
+        })).then(renderMala);
+      })
+      .catch(function (e) { falhaMala(mensagemErro(e)); });
   }
 
   function renderMala(grupos) {
     var alvo = $("lista-mala");
     alvo.innerHTML = "";
 
-    var comCoisa = grupos.filter(function (g) { return g.caps.length > 0; });
+    var comCoisa = grupos.filter(function (g) { return g.caps.length > 0 || g.erro; });
 
     if (comCoisa.length === 0) {
       var vazio = document.createElement("div");
@@ -998,9 +1035,11 @@
       return;
     }
 
-    comCoisa.sort(function (a, b) {
-      return (b.caps[b.caps.length - 1].criadaEm || "").localeCompare(a.caps[a.caps.length - 1].criadaEm || "");
-    });
+    function ultimoToque(g) {
+      if (!g.caps.length) return g.viv.criadaEm || "";
+      return g.caps[g.caps.length - 1].criadaEm || "";
+    }
+    comCoisa.sort(function (a, b) { return ultimoToque(b).localeCompare(ultimoToque(a)); });
 
     comCoisa.forEach(function (g) {
       alvo.appendChild(cartaoVivencia(g));
@@ -1019,7 +1058,7 @@
     h.textContent = g.viv.titulo || g.viv.pasta;
     head.appendChild(h);
 
-    var dias = diasDesde(g.caps[0].criadaEm);
+    var dias = diasDesde(g.caps.length ? g.caps[0].criadaEm : g.viv.criadaEm);
     if (dias >= 2) {
       var chip = document.createElement("span");
       chip.className = "parado";
@@ -1034,6 +1073,14 @@
     head.appendChild(slug);
 
     card.appendChild(head);
+
+    if (g.erro) {
+      var erroBox = document.createElement("div");
+      erroBox.className = "aviso";
+      erroBox.style.margin = "0 16px 14px";
+      erroBox.textContent = "Não consegui ler as capturas desta vivência: " + g.erro;
+      card.appendChild(erroBox);
+    }
 
     var ul = document.createElement("ul");
     ul.className = "capturas";
@@ -1102,7 +1149,10 @@
       li.appendChild(p);
     }
 
-    (c.fotos || []).forEach(function (f) {
+    // Uma captura pode trazer dezenas de fotos. Mostra algumas e conta o resto,
+    // para a linha não virar uma parede de miniaturas no celular.
+    var fotos = c.fotos || [];
+    fotos.slice(0, 6).forEach(function (f) {
       var img = document.createElement("img");
       img.className = "cap-foto";
       img.src = f.url || ("/_blob/" + f.id);
@@ -1110,6 +1160,13 @@
       img.loading = "lazy";
       li.appendChild(img);
     });
+    if (fotos.length > 6) {
+      var mais = document.createElement("span");
+      mais.className = "cap-hora";
+      mais.style.width = "auto";
+      mais.textContent = "+" + (fotos.length - 6) + " fotos";
+      li.appendChild(mais);
+    }
 
     var del = document.createElement("button");
     del.type = "button";
@@ -1208,17 +1265,21 @@
         return;
       }
       state.db = db;
-      db.collection("vivencias").orderBy("criadaEm", "desc").limit(120).onSnapshot(function (snap) {
+      // Sem orderBy no servidor: a ordenação acontece aqui, então a lista não
+      // depende de a consulta ordenada dar certo para aparecer.
+      db.collection("vivencias").limit(300).onSnapshot(function (snap) {
         state.vivencias = snap.docs.map(function (d) {
           var data = d.data() || {};
           data.pasta = data.pasta || d.id;
           return data;
+        }).sort(function (a, b) {
+          return (b.criadaEm || "").localeCompare(a.criadaEm || "");
         });
         renderSelect();
         atualizarChip();
         if (state.view === "mala") carregarMala();
-      }, function () {
-        aviso("A conexão com o guardado caiu. Recarregue a página.");
+      }, function (e) {
+        aviso("A lista de vivências parou de atualizar sozinha (" + (e && e.code) + "). O que você guardar continua sendo salvo, e a aba A mala relê tudo ao abrir.");
       });
     });
 
