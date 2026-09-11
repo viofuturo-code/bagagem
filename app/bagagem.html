@@ -721,7 +721,7 @@
     </section>
   </main>
 
-  <p class="versao" id="versao">Bagagem de Mão v4</p>
+  <p class="versao" id="versao">Bagagem de Mão v5</p>
 
   <nav class="tabs">
     <button type="button" id="tab-capturar" aria-current="true">Capturar</button>
@@ -1157,7 +1157,8 @@
       diag.set("origem", snap.metadata && snap.metadata.fromCache ? "cache local" : "servidor");
 
       var todas = snap.docs.map(function (d) {
-        var data = d.data() || {};
+        // O corpo devolvido pelo banco é congelado: clonar antes de acrescentar campo.
+        var data = Object.assign({}, d.data() || {});
         data.pasta = data.pasta || d.id;
         return data;
       });
@@ -1172,7 +1173,7 @@
         return r.db.collection("vivencias/" + v.pasta + "/capturas").limit(300).get()
           .then(function (s) {
             var caps = s.docs.map(function (d) {
-              var data = d.data() || {};
+              var data = Object.assign({}, d.data() || {});
               data.__id = d.id;
               return data;
             });
@@ -1640,7 +1641,7 @@
     $("texto").value = lerRascunho();
     atualizarNovaWrap();
 
-    diag.set("versão", "v4");
+    diag.set("versão", "v5");
     diag.set("window.claude", (window.claude && window.claude.use) ? "presente" : "ausente");
 
     if (!window.claude || !window.claude.use) {
@@ -1663,7 +1664,7 @@
       // depende de a consulta ordenada dar certo para aparecer.
       db.collection("vivencias").limit(300).onSnapshot(function (snap) {
         state.vivencias = snap.docs.map(function (d) {
-          var data = d.data() || {};
+          var data = Object.assign({}, d.data() || {});
           data.pasta = data.pasta || d.id;
           return data;
         }).sort(function (a, b) {
