@@ -1,0 +1,1236 @@
+<title>Bagagem de Mão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --ground: #F7F3EE;
+    --surface: #FFFFFF;
+    --surface-2: #F1EAF6;
+    --ink: #300053;
+    --ink-soft: #6B5A7E;
+    --brand: #4B0082;
+    --action: #007A74;
+    --action-ink: #FFFFFF;
+    --warm: #A0522D;
+    --line: #DFD3E8;
+    --line-strong: #C8A8E9;
+    --mark: #4B0082;
+    --shadow: 0 1px 2px rgba(48, 0, 83, .06), 0 8px 24px rgba(48, 0, 83, .07);
+    --tab-ink: #6B5A7E;
+    --tab-ink-on: #4B0082;
+    --field: #FFFFFF;
+  }
+
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #1E0036;
+      --surface: #300053;
+      --surface-2: #3B1063;
+      --ink: #F7F3EE;
+      --ink-soft: #C8A8E9;
+      --brand: #C8A8E9;
+      --action: #C8A8E9;
+      --action-ink: #300053;
+      --warm: #F7F3EE;
+      --line: #4A1C74;
+      --line-strong: #C8A8E9;
+      --mark: #FFFFFF;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+      --tab-ink: #A98FC4;
+      --tab-ink-on: #F7F3EE;
+      --field: #260044;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #1E0036;
+    --surface: #300053;
+    --surface-2: #3B1063;
+    --ink: #F7F3EE;
+    --ink-soft: #C8A8E9;
+    --brand: #C8A8E9;
+    --action: #C8A8E9;
+    --action-ink: #300053;
+    --warm: #F7F3EE;
+    --line: #4A1C74;
+    --line-strong: #C8A8E9;
+    --mark: #FFFFFF;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+    --tab-ink: #A98FC4;
+    --tab-ink-on: #F7F3EE;
+    --field: #260044;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .shell {
+    max-width: 620px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- cabeçalho ---------- */
+
+  /* O cabeçalho é a assinatura da marca: roxo oficial nos dois temas,
+     com texto e símbolo em branco, como manda a regra de contraste. */
+  .top {
+    position: relative;
+    overflow: hidden;
+    background: #4B0082;
+    color: #F7F3EE;
+    padding: 14px 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .orbit {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    color: #FFFFFF;
+  }
+
+  .orbit-bg {
+    position: absolute;
+    right: -70px;
+    top: -110px;
+    width: 260px;
+    height: 260px;
+    color: #FFFFFF;
+    opacity: .13;
+    pointer-events: none;
+  }
+
+  .wordmark {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: .035em;
+    line-height: 1;
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .wordmark span {
+    display: block;
+    font-family: "Roboto", sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    opacity: .72;
+    margin-top: 4px;
+  }
+
+  .mala-chip {
+    margin-left: auto;
+    position: relative;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 14px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, .16);
+    border: 1px solid rgba(255, 255, 255, .3);
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+
+  /* ---------- corpo ---------- */
+
+  main {
+    flex: 1;
+    padding: 20px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .view[hidden] { display: none !important; }
+
+  .eyebrow {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  h2 {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: .01em;
+    margin: 2px 0 0;
+    text-wrap: balance;
+  }
+
+  .field-label {
+    display: block;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+  }
+
+  textarea, input[type="text"], select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--field);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 13px;
+  }
+
+  textarea {
+    min-height: 158px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 19px) calc(50% + 1px), calc(100% - 13px) calc(50% + 1px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 38px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--line-strong);
+    outline-offset: 2px;
+  }
+
+  .block {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .row > * { flex: 1 1 150px; }
+
+  button {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 13px 16px;
+    cursor: pointer;
+    background: var(--surface-2);
+    color: var(--ink);
+    transition: opacity .15s ease;
+  }
+
+  button:disabled { opacity: .45; cursor: default; }
+  button:not(:disabled):active { opacity: .78; }
+
+  .btn-primary {
+    background: var(--action);
+    color: var(--action-ink);
+    font-size: 18px;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--line);
+    color: var(--ink-soft);
+  }
+
+  .btn-tiny {
+    font-size: 14px;
+    padding: 7px 11px;
+    letter-spacing: .06em;
+    flex: 0 0 auto;
+  }
+
+  .helper {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .anexo-strip {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .thumb {
+    position: relative;
+    width: 62px;
+    height: 62px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    flex: none;
+    background: var(--surface-2);
+  }
+
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .thumb button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 21px;
+    height: 21px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(30, 0, 54, .78);
+    color: #F7F3EE;
+    font-size: 13px;
+    line-height: 1;
+    border: none;
+  }
+
+  /* ---------- pergunta de aprofundamento ---------- */
+
+  .puxada {
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    padding: 15px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .puxada q {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.42;
+    quotes: "“" "”";
+    color: var(--ink);
+  }
+
+  /* ---------- a mala ---------- */
+
+  .viv {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .viv-head {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    padding: 14px 16px 11px;
+    flex-wrap: wrap;
+  }
+
+  .viv-titulo {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
+    flex: 1 1 auto;
+  }
+
+  .viv-slug {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    word-break: break-all;
+  }
+
+  .parado {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 13.5px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--warm);
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 2px 9px;
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .capturas { list-style: none; margin: 0; padding: 0; }
+
+  .cap {
+    display: flex;
+    gap: 11px;
+    padding: 11px 16px;
+    border-top: 1px solid var(--line);
+    align-items: flex-start;
+  }
+
+  .cap-hora {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+    width: 42px;
+    padding-top: 2px;
+  }
+
+  .cap-texto {
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 0;
+  }
+
+  .cap-foto {
+    width: 46px;
+    height: 46px;
+    border-radius: 7px;
+    object-fit: cover;
+    flex: none;
+    border: 1px solid var(--line);
+  }
+
+  .cap-del {
+    flex: none;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 13px;
+    padding: 2px 4px;
+    letter-spacing: 0;
+  }
+
+  .viv-acoes {
+    display: flex;
+    gap: 9px;
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+
+  .vazio {
+    text-align: center;
+    padding: 34px 18px;
+    color: var(--ink-soft);
+  }
+
+  .vazio p { margin: 0 0 6px; }
+
+  .vazio .frase {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+    margin-top: 14px;
+    line-height: 1.45;
+  }
+
+  /* ---------- abas ---------- */
+
+  .tabs {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .tabs button {
+    background: none;
+    border: none;
+    border-radius: 0;
+    color: var(--tab-ink);
+    padding: 14px 8px;
+    font-size: 16px;
+    letter-spacing: .09em;
+    border-top: 3px solid transparent;
+    margin-top: -1px;
+  }
+
+  .tabs button[aria-current="true"] {
+    color: var(--tab-ink-on);
+    border-top-color: var(--tab-ink-on);
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 82px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--ground);
+    font-size: 14.5px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    z-index: 20;
+    max-width: calc(100% - 32px);
+    text-align: center;
+  }
+
+  .aviso {
+    border-left: 3px solid var(--warm);
+    background: var(--surface-2);
+    padding: 11px 14px;
+    border-radius: 0 10px 10px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="shell">
+  <header class="top">
+    <svg class="orbit-bg" viewBox="60 90 320 320" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="9" opacity="0.85">
+        <path d="M157.428 289.426C201.08 361.031 265.76 401.221 301.896 379.192C338.031 357.163 331.938 281.258 288.287 209.652C244.635 138.047 179.955 97.8579 143.819 119.887C107.683 141.916 113.777 217.821 157.428 289.426Z"/>
+        <path d="M154.153 212.823C112.877 285.824 109.281 361.888 146.121 382.718C182.961 403.548 246.286 361.256 287.562 288.255C328.837 215.255 332.434 139.19 295.594 118.36C258.754 97.5303 195.429 139.823 154.153 212.823Z"/>
+        <path d="M257.869 186.003C185.053 144.403 109.005 140.469 88.0118 177.216C67.0184 213.963 109.029 277.475 181.846 319.075C254.662 360.675 330.71 364.609 351.703 327.862C372.696 291.115 330.686 227.603 257.869 186.003Z"/>
+        <path d="M181.563 183.133C109.004 225.18 67.3847 288.95 88.6039 325.567C109.823 362.184 185.845 357.782 258.404 315.735C330.963 273.687 372.582 209.917 351.363 173.301C330.144 136.684 254.122 141.086 181.563 183.133Z"/>
+      </g>
+    </svg>
+    <svg class="orbit" viewBox="60 90 320 320" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="13" opacity="0.9">
+        <path d="M157.428 289.426C201.08 361.031 265.76 401.221 301.896 379.192C338.031 357.163 331.938 281.258 288.287 209.652C244.635 138.047 179.955 97.8579 143.819 119.887C107.683 141.916 113.777 217.821 157.428 289.426Z"/>
+        <path d="M154.153 212.823C112.877 285.824 109.281 361.888 146.121 382.718C182.961 403.548 246.286 361.256 287.562 288.255C328.837 215.255 332.434 139.19 295.594 118.36C258.754 97.5303 195.429 139.823 154.153 212.823Z"/>
+        <path d="M257.869 186.003C185.053 144.403 109.005 140.469 88.0118 177.216C67.0184 213.963 109.029 277.475 181.846 319.075C254.662 360.675 330.71 364.609 351.703 327.862C372.696 291.115 330.686 227.603 257.869 186.003Z"/>
+        <path d="M181.563 183.133C109.004 225.18 67.3847 288.95 88.6039 325.567C109.823 362.184 185.845 357.782 258.404 315.735C330.963 273.687 372.582 209.917 351.363 173.301C330.144 136.684 254.122 141.086 181.563 183.133Z"/>
+      </g>
+    </svg>
+    <div class="wordmark">Bagagem<span>Caixa de entrada</span></div>
+    <div class="mala-chip" id="chip">na mala: 0</div>
+  </header>
+
+  <main>
+    <!-- ============ CAPTURAR ============ -->
+    <section class="view" id="view-capturar">
+      <div id="aviso-slot"></div>
+
+      <div>
+        <p class="eyebrow">Agora, na rua</p>
+        <h2 id="saudacao">O que aconteceu?</h2>
+      </div>
+
+      <div class="block">
+        <div>
+          <label class="field-label" for="texto">Solta aqui</label>
+          <textarea id="texto" placeholder="Três frases bastam. O que você viu, o que te pegou, e por quê." autocapitalize="sentences"></textarea>
+          <p class="helper">Se for mais fácil falar do que digitar, use o ditado do teclado. O texto entra igual.</p>
+        </div>
+
+        <div>
+          <label class="field-label" for="viv-select">Isso é de qual vivência?</label>
+          <select id="viv-select">
+            <option value="__nova__">Vivência nova</option>
+          </select>
+        </div>
+
+        <div id="nova-wrap">
+          <label class="field-label" for="viv-titulo">Nome da vivência nova</label>
+          <input type="text" id="viv-titulo" placeholder="Feira de Cantão, aula sobre Sociedade 5.0, jantar com o cliente" autocapitalize="sentences">
+          <p class="helper" id="slug-preview">A pasta no acervo vai se chamar: <strong>acervo/</strong></p>
+        </div>
+
+        <div class="anexo-strip" id="anexos">
+          <button type="button" class="btn-ghost btn-tiny" id="btn-foto">+ Foto</button>
+        </div>
+        <input type="file" id="file-input" accept="image/*" multiple hidden>
+
+        <button type="button" class="btn-primary" id="btn-guardar">Guardar na mala</button>
+      </div>
+
+      <div class="puxada" id="puxada" hidden>
+        <p class="eyebrow" id="puxada-label">Puxando mais um detalhe</p>
+        <q id="puxada-texto">Pensando...</q>
+        <textarea id="puxada-resposta" placeholder="Responde em uma frase, ou pula." style="min-height:82px"></textarea>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btn-puxada-salvar">Anexar resposta</button>
+          <button type="button" class="btn-ghost" id="btn-puxada-pular">Pular</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ A MALA ============ -->
+    <section class="view" id="view-mala" hidden>
+      <div>
+        <p class="eyebrow">Esperando ser desfeita</p>
+        <h2>A mala</h2>
+        <p class="helper" style="margin-top:8px">Isto não é o acervo. É o que ainda não virou <strong>vivencia.md</strong>. Rode <strong>/pos</strong> no Claude Code para destilar, depois marque como desfeita aqui.</p>
+      </div>
+      <div id="lista-mala"></div>
+    </section>
+  </main>
+
+  <nav class="tabs">
+    <button type="button" id="tab-capturar" aria-current="true">Capturar</button>
+    <button type="button" id="tab-mala">A mala</button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DRAFT_KEY = "bagagem.rascunho";
+  var state = {
+    db: null,
+    assets: null,
+    sample: null,
+    downloads: null,
+    vivencias: [],
+    capturas: {},
+    anexos: [],
+    view: "capturar",
+    ultimaCaptura: null
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------------- utilidades ---------------- */
+
+  function slugify(s) {
+    return (s || "")
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 42) || "sem-titulo";
+  }
+
+  function pastaDe(titulo, dataIso) {
+    var d = dataIso ? new Date(dataIso) : new Date();
+    var ano = d.getFullYear();
+    var mes = String(d.getMonth() + 1).padStart(2, "0");
+    return ano + "-" + mes + "-" + slugify(titulo);
+  }
+
+  function diasDesde(iso) {
+    if (!iso) return 0;
+    return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  }
+
+  function hhmm(iso) {
+    var d = new Date(iso);
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  }
+
+  function diaMes(iso) {
+    var d = new Date(iso);
+    return String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+  }
+
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3200);
+  }
+
+  function aviso(texto) {
+    $("aviso-slot").innerHTML = "";
+    var d = document.createElement("div");
+    d.className = "aviso";
+    d.textContent = texto;
+    $("aviso-slot").appendChild(d);
+  }
+
+  /* ---------------- rascunho local ---------------- */
+
+  function salvarRascunho() {
+    try { localStorage.setItem(DRAFT_KEY, $("texto").value); } catch (e) { /* sem storage, tudo bem */ }
+  }
+
+  function lerRascunho() {
+    try { return localStorage.getItem(DRAFT_KEY) || ""; } catch (e) { return ""; }
+  }
+
+  function limparRascunho() {
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* idem */ }
+  }
+
+  /* ---------------- navegação ---------------- */
+
+  function mostrar(v) {
+    state.view = v;
+    $("view-capturar").hidden = v !== "capturar";
+    $("view-mala").hidden = v !== "mala";
+    $("tab-capturar").setAttribute("aria-current", String(v === "capturar"));
+    $("tab-mala").setAttribute("aria-current", String(v === "mala"));
+    if (v === "mala") carregarMala();
+    window.scrollTo(0, 0);
+  }
+
+  $("tab-capturar").addEventListener("click", function () { mostrar("capturar"); });
+  $("tab-mala").addEventListener("click", function () { mostrar("mala"); });
+
+  /* ---------------- formulário ---------------- */
+
+  function atualizarNovaWrap() {
+    var nova = $("viv-select").value === "__nova__";
+    $("nova-wrap").hidden = !nova;
+    atualizarSlugPreview();
+  }
+
+  function atualizarSlugPreview() {
+    var t = $("viv-titulo").value.trim();
+    $("slug-preview").innerHTML = "A pasta no acervo vai se chamar: <strong>acervo/" +
+      (t ? pastaDe(t) : "aaaa-mm-...") + "</strong>";
+  }
+
+  $("viv-select").addEventListener("change", atualizarNovaWrap);
+  $("viv-titulo").addEventListener("input", atualizarSlugPreview);
+  $("texto").addEventListener("input", salvarRascunho);
+
+  /* ---------------- fotos ---------------- */
+
+  $("btn-foto").addEventListener("click", function () { $("file-input").click(); });
+
+  $("file-input").addEventListener("change", function (ev) {
+    var arquivos = Array.prototype.slice.call(ev.target.files || []);
+    arquivos.forEach(adicionarFoto);
+    ev.target.value = "";
+  });
+
+  function redimensionar(file) {
+    return new Promise(function (resolve) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var max = 1600;
+        var escala = Math.min(1, max / Math.max(img.width, img.height));
+        var w = Math.round(img.width * escala);
+        var h = Math.round(img.height * escala);
+        var cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        cv.toBlob(function (blob) { resolve(blob || file); }, "image/jpeg", 0.85);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
+
+  function adicionarFoto(file) {
+    if (!/^image\//.test(file.type)) return;
+    redimensionar(file).then(function (blob) {
+      var item = { blob: blob, url: URL.createObjectURL(blob) };
+      state.anexos.push(item);
+      renderAnexos();
+    });
+  }
+
+  function renderAnexos() {
+    var strip = $("anexos");
+    strip.querySelectorAll(".thumb").forEach(function (n) { n.remove(); });
+    state.anexos.forEach(function (item, i) {
+      var d = document.createElement("div");
+      d.className = "thumb";
+      var img = document.createElement("img");
+      img.src = item.url;
+      img.alt = "Foto " + (i + 1);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "×";
+      b.setAttribute("aria-label", "Tirar foto " + (i + 1));
+      b.addEventListener("click", function () {
+        URL.revokeObjectURL(item.url);
+        state.anexos.splice(i, 1);
+        renderAnexos();
+      });
+      d.appendChild(img);
+      d.appendChild(b);
+      strip.insertBefore(d, $("btn-foto"));
+    });
+  }
+
+  /* ---------------- guardar ---------------- */
+
+  $("btn-guardar").addEventListener("click", guardar);
+
+  function guardar() {
+    var texto = $("texto").value.trim();
+    if (!texto && state.anexos.length === 0) {
+      toast("Escreve alguma coisa ou anexa uma foto.");
+      $("texto").focus();
+      return;
+    }
+    if (!state.db) {
+      toast("Sem conexão com o guardado. Copie o texto antes de fechar.");
+      return;
+    }
+
+    var sel = $("viv-select").value;
+    var pasta, titulo;
+
+    if (sel === "__nova__") {
+      titulo = $("viv-titulo").value.trim();
+      if (!titulo) {
+        toast("Dá um nome pra essa vivência.");
+        $("viv-titulo").focus();
+        return;
+      }
+      pasta = pastaDe(titulo);
+    } else {
+      pasta = sel;
+      var achou = state.vivencias.find(function (v) { return v.pasta === pasta; });
+      titulo = achou ? achou.titulo : pasta;
+    }
+
+    var btn = $("btn-guardar");
+    btn.disabled = true;
+    btn.textContent = "Guardando...";
+
+    subirAnexos()
+      .then(function (fotos) {
+        var ref = state.db.doc("vivencias/" + pasta);
+        return ref.get()
+          .then(function (snap) {
+            // set substitui o documento inteiro, então só na criação.
+            if (snap.exists) return;
+            return ref.set({
+              titulo: titulo,
+              pasta: pasta,
+              status: "na-mala",
+              criadaEm: new Date().toISOString()
+            });
+          })
+        .then(function () {
+          return state.db.collection("vivencias/" + pasta + "/capturas").add({
+            texto: texto,
+            fotos: fotos,
+            criadaEm: new Date().toISOString(),
+            origem: "celular"
+          });
+        });
+      })
+      .then(function () {
+        state.anexos.forEach(function (a) { URL.revokeObjectURL(a.url); });
+        state.anexos = [];
+        renderAnexos();
+        state.ultimaCaptura = { pasta: pasta, titulo: titulo, texto: texto };
+        $("texto").value = "";
+        limparRascunho();
+        $("viv-titulo").value = "";
+        toast("Guardado em " + pasta);
+        if (texto.length > 40) pedirPuxada(texto, titulo);
+      })
+      .catch(function (e) {
+        toast(mensagemErro(e));
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = "Guardar na mala";
+      });
+  }
+
+  function mensagemErro(e) {
+    var c = e && e.code;
+    if (c === "quota_exceeded") return "A mala encheu. Desfaça algumas vivências primeiro.";
+    if (c === "resource_exhausted") return "Muita coisa de uma vez. Espera uns segundos.";
+    if (c === "revoked" || c === "not_granted") return "O acesso ao guardado caiu. Recarregue a página.";
+    return "Não consegui guardar. Copie o texto antes de fechar.";
+  }
+
+  function subirAnexos() {
+    if (state.anexos.length === 0) return Promise.resolve([]);
+    if (!state.assets) {
+      toast("Não consegui anexar as fotos. O texto vai sozinho.");
+      return Promise.resolve([]);
+    }
+    return Promise.all(state.anexos.map(function (a) {
+      return state.assets.upload(a.blob)
+        .then(function (r) { return { id: r.id, url: r.url }; })
+        .catch(function () { return null; });
+    })).then(function (r) { return r.filter(Boolean); });
+  }
+
+  /* ---------------- pergunta de aprofundamento ---------------- */
+
+  function pedirPuxada(texto, titulo) {
+    if (!state.sample) return;
+    $("puxada").hidden = false;
+    $("puxada-texto").textContent = "Pensando...";
+    $("puxada-resposta").value = "";
+    $("puxada-label").textContent = "Puxando mais um detalhe";
+
+    var prompt = [
+      "Você ajuda a Nay a capturar repertório de uma vivência no calor do momento.",
+      "Ela acabou de registrar isto sobre a vivência \"" + titulo + "\":",
+      "",
+      texto,
+      "",
+      "Faça UMA única pergunta curta que puxe o detalhe concreto que essa nota ainda não tem:",
+      "uma cena, um número, uma fala que ela ouviu, um cheiro, uma reação de alguém, um contraste.",
+      "A pergunta tem que ser específica desta nota. Se serviria para qualquer outra vivência, está errada.",
+      "Nunca pergunte 'como você se sentiu' nem 'o que você aprendeu'.",
+      "Escreva em português do Brasil, no máximo 18 palavras, sem travessão, sem introdução.",
+      "Responda só com a pergunta."
+    ].join("\n");
+
+    state.sample(prompt, { modelTier: "quick" })
+      .then(function (r) {
+        $("puxada-texto").textContent = (r.text || "").trim().replace(/^["“”']|["“”']$/g, "");
+      })
+      .catch(function (e) {
+        if (e && e.code === "not_granted") { $("puxada").hidden = true; return; }
+        $("puxada-label").textContent = "Sem a pergunta agora";
+        $("puxada-texto").textContent = "Que detalhe concreto dessa cena você não escreveu ainda?";
+      });
+  }
+
+  $("btn-puxada-pular").addEventListener("click", function () { $("puxada").hidden = true; });
+
+  $("btn-puxada-salvar").addEventListener("click", function () {
+    var resposta = $("puxada-resposta").value.trim();
+    var ctx = state.ultimaCaptura;
+    if (!resposta || !ctx || !state.db) { $("puxada").hidden = true; return; }
+    var pergunta = $("puxada-texto").textContent;
+    state.db.collection("vivencias/" + ctx.pasta + "/capturas").add({
+      texto: pergunta + "\n" + resposta,
+      fotos: [],
+      criadaEm: new Date().toISOString(),
+      origem: "aprofundamento"
+    }).then(function () {
+      toast("Anexado.");
+    }).catch(function (e) {
+      toast(mensagemErro(e));
+    }).finally(function () {
+      $("puxada").hidden = true;
+    });
+  });
+
+  /* ---------------- a mala ---------------- */
+
+  function carregarMala() {
+    var alvo = $("lista-mala");
+    if (!state.db) {
+      alvo.innerHTML = "";
+      var p = document.createElement("div");
+      p.className = "vazio";
+      p.textContent = "Não consegui abrir o guardado nesta tela.";
+      alvo.appendChild(p);
+      return;
+    }
+
+    var abertas = state.vivencias.filter(function (v) { return v.status !== "desfeita"; });
+    if (abertas.length === 0) { renderMala([]); return; }
+
+    Promise.all(abertas.map(function (v) {
+      return state.db.collection("vivencias/" + v.pasta + "/capturas")
+        .orderBy("criadaEm", "asc").limit(200).get()
+        .then(function (snap) {
+          return {
+            viv: v,
+            caps: snap.docs.map(function (d) {
+              var data = d.data() || {};
+              data.__id = d.id;
+              return data;
+            })
+          };
+        })
+        .catch(function () { return { viv: v, caps: [] }; });
+    })).then(renderMala);
+  }
+
+  function renderMala(grupos) {
+    var alvo = $("lista-mala");
+    alvo.innerHTML = "";
+
+    var comCoisa = grupos.filter(function (g) { return g.caps.length > 0; });
+
+    if (comCoisa.length === 0) {
+      var vazio = document.createElement("div");
+      vazio.className = "vazio";
+      vazio.innerHTML =
+        "<p>A mala está vazia.</p>" +
+        "<p>Bom sinal. Quer dizer que você desfez tudo.</p>" +
+        "<p class=\"frase\">Use tecnologia para liberar tempo. Use o tempo pra viver experiências reais.</p>";
+      alvo.appendChild(vazio);
+      return;
+    }
+
+    comCoisa.sort(function (a, b) {
+      return (b.caps[b.caps.length - 1].criadaEm || "").localeCompare(a.caps[a.caps.length - 1].criadaEm || "");
+    });
+
+    comCoisa.forEach(function (g) {
+      alvo.appendChild(cartaoVivencia(g));
+    });
+  }
+
+  function cartaoVivencia(g) {
+    var card = document.createElement("article");
+    card.className = "viv";
+
+    var head = document.createElement("div");
+    head.className = "viv-head";
+
+    var h = document.createElement("h3");
+    h.className = "viv-titulo";
+    h.textContent = g.viv.titulo || g.viv.pasta;
+    head.appendChild(h);
+
+    var dias = diasDesde(g.caps[0].criadaEm);
+    if (dias >= 2) {
+      var chip = document.createElement("span");
+      chip.className = "parado";
+      chip.textContent = "parada há " + dias + " dias";
+      head.appendChild(chip);
+    }
+
+    var slug = document.createElement("div");
+    slug.className = "viv-slug";
+    slug.style.flex = "1 0 100%";
+    slug.textContent = "acervo/" + g.viv.pasta + "  ·  " + g.caps.length + (g.caps.length === 1 ? " captura" : " capturas");
+    head.appendChild(slug);
+
+    card.appendChild(head);
+
+    var ul = document.createElement("ul");
+    ul.className = "capturas";
+    g.caps.forEach(function (c) {
+      ul.appendChild(linhaCaptura(g.viv.pasta, c));
+    });
+    card.appendChild(ul);
+
+    var acoes = document.createElement("div");
+    acoes.className = "viv-acoes";
+
+    var bCopiar = document.createElement("button");
+    bCopiar.type = "button";
+    bCopiar.className = "btn-ghost btn-tiny";
+    bCopiar.textContent = "Copiar markdown";
+    bCopiar.addEventListener("click", function () {
+      var md = montarMarkdown(g);
+      copiar(md).then(function () { toast("Markdown copiado."); },
+                       function () { toast("Não consegui copiar aqui."); });
+    });
+    acoes.appendChild(bCopiar);
+
+    if (state.downloads) {
+      var bBaixar = document.createElement("button");
+      bBaixar.type = "button";
+      bBaixar.className = "btn-ghost btn-tiny";
+      bBaixar.textContent = "Baixar .md";
+      bBaixar.addEventListener("click", function () {
+        state.downloads.save({
+          filename: g.viv.pasta + "-bruto.md",
+          data: montarMarkdown(g)
+        }).catch(function () { toast("Download recusado."); });
+      });
+      acoes.appendChild(bBaixar);
+    }
+
+    var bFeito = document.createElement("button");
+    bFeito.type = "button";
+    bFeito.className = "btn-ghost btn-tiny";
+    bFeito.textContent = "Marcar como desfeita";
+    bFeito.addEventListener("click", function () {
+      if (!confirm("Marcar \"" + (g.viv.titulo || g.viv.pasta) + "\" como desfeita? Só faça isso depois de rodar /pos e conferir o vivencia.md.")) return;
+      state.db.doc("vivencias/" + g.viv.pasta).update({ status: "desfeita", desfeitaEm: new Date().toISOString() })
+        .then(function () { toast("Fora da mala."); carregarMala(); })
+        .catch(function (e) { toast(mensagemErro(e)); });
+    });
+    acoes.appendChild(bFeito);
+
+    card.appendChild(acoes);
+    return card;
+  }
+
+  function linhaCaptura(pasta, c) {
+    var li = document.createElement("li");
+    li.className = "cap";
+
+    var hora = document.createElement("span");
+    hora.className = "cap-hora";
+    hora.textContent = diasDesde(c.criadaEm) >= 1 ? diaMes(c.criadaEm) : hhmm(c.criadaEm);
+    li.appendChild(hora);
+
+    if (c.texto) {
+      var p = document.createElement("p");
+      p.className = "cap-texto";
+      p.textContent = c.texto;
+      li.appendChild(p);
+    }
+
+    (c.fotos || []).forEach(function (f) {
+      var img = document.createElement("img");
+      img.className = "cap-foto";
+      img.src = f.url || ("/_blob/" + f.id);
+      img.alt = "Foto anexada";
+      img.loading = "lazy";
+      li.appendChild(img);
+    });
+
+    var del = document.createElement("button");
+    del.type = "button";
+    del.className = "cap-del";
+    del.textContent = "apagar";
+    del.addEventListener("click", function () {
+      if (!confirm("Apagar esta captura de vez?")) return;
+      state.db.doc("vivencias/" + pasta + "/capturas/" + c.__id).delete()
+        .then(function () { carregarMala(); })
+        .catch(function (e) { toast(mensagemErro(e)); });
+    });
+    li.appendChild(del);
+
+    return li;
+  }
+
+  function montarMarkdown(g) {
+    var linhas = [];
+    linhas.push("# " + (g.viv.titulo || g.viv.pasta));
+    linhas.push("");
+    linhas.push("Pasta: `acervo/" + g.viv.pasta + "/`");
+    linhas.push("Capturado pelo celular, ainda não destilado.");
+    linhas.push("");
+    g.caps.forEach(function (c) {
+      var d = new Date(c.criadaEm);
+      linhas.push("## " + d.toLocaleDateString("pt-BR") + " " + hhmm(c.criadaEm) +
+        (c.origem === "aprofundamento" ? " (aprofundamento)" : ""));
+      linhas.push("");
+      if (c.texto) { linhas.push(c.texto); linhas.push(""); }
+      (c.fotos || []).forEach(function (f, i) {
+        linhas.push("Foto " + (i + 1) + ": `" + (f.id || f.url) + "`");
+      });
+      if ((c.fotos || []).length) linhas.push("");
+    });
+    return linhas.join("\n");
+  }
+
+  function copiar(txt) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(txt);
+    }
+    return Promise.reject(new Error("sem clipboard"));
+  }
+
+  /* ---------------- boot ---------------- */
+
+  function renderSelect() {
+    var sel = $("viv-select");
+    var atual = sel.value;
+    sel.innerHTML = "";
+    var nova = document.createElement("option");
+    nova.value = "__nova__";
+    nova.textContent = "Vivência nova";
+    sel.appendChild(nova);
+
+    state.vivencias
+      .filter(function (v) { return v.status !== "desfeita"; })
+      .sort(function (a, b) { return (b.criadaEm || "").localeCompare(a.criadaEm || ""); })
+      .forEach(function (v) {
+        var o = document.createElement("option");
+        o.value = v.pasta;
+        o.textContent = v.titulo || v.pasta;
+        sel.appendChild(o);
+      });
+
+    if (atual && sel.querySelector('option[value="' + CSS.escape(atual) + '"]')) sel.value = atual;
+    atualizarNovaWrap();
+  }
+
+  function atualizarChip() {
+    var abertas = state.vivencias.filter(function (v) { return v.status !== "desfeita"; }).length;
+    $("chip").textContent = abertas === 0 ? "mala vazia" : "na mala: " + abertas;
+  }
+
+  function saudacao() {
+    var h = new Date().getHours();
+    if (h < 5) return "Ainda acordada?";
+    if (h < 12) return "O que aconteceu?";
+    if (h < 18) return "O que aconteceu?";
+    return "Como foi o dia?";
+  }
+
+  function iniciar() {
+    $("saudacao").textContent = saudacao();
+    $("texto").value = lerRascunho();
+    atualizarNovaWrap();
+
+    if (!window.claude || !window.claude.use) {
+      aviso("Esta página só guarda de verdade quando aberta pelo link publicado do Claude. Aqui o que você escrever fica só nesta tela.");
+      return;
+    }
+
+    window.claude.use("db").then(function (db) {
+      if (!db) {
+        aviso("Não consegui abrir o guardado. Escreva mesmo assim e copie o texto antes de fechar.");
+        return;
+      }
+      state.db = db;
+      db.collection("vivencias").orderBy("criadaEm", "desc").limit(120).onSnapshot(function (snap) {
+        state.vivencias = snap.docs.map(function (d) {
+          var data = d.data() || {};
+          data.pasta = data.pasta || d.id;
+          return data;
+        });
+        renderSelect();
+        atualizarChip();
+        if (state.view === "mala") carregarMala();
+      }, function () {
+        aviso("A conexão com o guardado caiu. Recarregue a página.");
+      });
+    });
+
+    window.claude.use("assets").then(function (a) {
+      state.assets = a;
+      $("btn-foto").hidden = !a;
+    });
+
+    window.claude.use("sample").then(function (s) { state.sample = s; });
+    window.claude.use("downloads").then(function (d) { state.downloads = d; });
+  }
+
+  iniciar();
+})();
+</script>
