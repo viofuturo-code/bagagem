@@ -1,0 +1,21 @@
+# Áudio e vídeo ficam fora do GitHub (pesados e com limite de tamanho).
+# O original fica no celular ou no Drive. No repositório entra a transcrição.
+*.mp3
+*.m4a
+*.wav
+*.aac
+*.ogg
+*.opus
+*.flac
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Configurações pessoais do Claude Code nesta máquina
+.claude/settings.local.json
