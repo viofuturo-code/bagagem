@@ -414,13 +414,51 @@
     padding-top: 2px;
   }
 
-  .cap-texto {
+  /* min-width:0 é o que impede o texto de ser espremido pelas miniaturas
+     e quebrar uma letra por linha. */
+  .cap-corpo {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .cap-texto {
     font-size: 15px;
     line-height: 1.5;
     white-space: pre-wrap;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .cap-texto.aberta {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+
+  .cap-mais {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: inherit;
+    align-self: flex-start;
+  }
+
+  .cap-fotos {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
   .cap-foto {
@@ -494,6 +532,17 @@
   .tabs button[aria-current="true"] {
     color: var(--tab-ink-on);
     border-top-color: var(--tab-ink-on);
+  }
+
+  .versao {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: .65;
+    margin: 0;
+    padding: 8px 16px 10px;
   }
 
   .toast {
@@ -603,11 +652,37 @@
       <div>
         <p class="eyebrow">Esperando ser desfeita</p>
         <h2>A mala</h2>
-        <p class="helper" style="margin-top:8px">Isto não é o acervo. É o que ainda não virou <strong>vivencia.md</strong>. Rode <strong>/pos</strong> no Claude Code para destilar, depois marque como desfeita aqui.</p>
+        <p class="helper" style="margin-top:8px">Isto não é o acervo. É o que ainda não virou <strong>vivencia.md</strong>. Toque em <strong>Destilar</strong> para transformar as capturas em vivência estruturada.</p>
       </div>
       <div id="lista-mala"></div>
     </section>
+
+    <!-- ============ DESTILAR ============ -->
+    <section class="view" id="view-destilar" hidden>
+      <div>
+        <p class="eyebrow">Desfazendo a mala</p>
+        <h2 id="dest-titulo">Vivência</h2>
+        <p class="helper" style="margin-top:8px" id="dest-sub"></p>
+      </div>
+
+      <div class="row">
+        <button type="button" class="btn-primary" id="btn-destilar">Destilar</button>
+        <button type="button" class="btn-ghost" id="btn-dest-voltar">Voltar</button>
+      </div>
+
+      <p class="helper" id="dest-status" hidden></p>
+
+      <textarea id="dest-texto" style="min-height:420px;font-size:14px" placeholder="O vivencia.md aparece aqui. Você pode editar antes de guardar."></textarea>
+
+      <div class="row">
+        <button type="button" class="btn-primary" id="btn-dest-salvar">Guardar destilação</button>
+        <button type="button" class="btn-ghost" id="btn-dest-copiar">Copiar</button>
+        <button type="button" class="btn-ghost" id="btn-dest-baixar" hidden>Baixar .md</button>
+      </div>
+    </section>
   </main>
+
+  <p class="versao" id="versao">Bagagem de Mão v3</p>
 
   <nav class="tabs">
     <button type="button" id="tab-capturar" aria-current="true">Capturar</button>
@@ -629,7 +704,8 @@
     capturas: {},
     anexos: [],
     view: "capturar",
-    ultimaCaptura: null
+    ultimaCaptura: null,
+    destilando: null
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -703,8 +779,10 @@
     state.view = v;
     $("view-capturar").hidden = v !== "capturar";
     $("view-mala").hidden = v !== "mala";
+    $("view-destilar").hidden = v !== "destilar";
     $("tab-capturar").setAttribute("aria-current", String(v === "capturar"));
-    $("tab-mala").setAttribute("aria-current", String(v === "mala"));
+    // Destilar é uma subtela da mala, então a aba continua marcada.
+    $("tab-mala").setAttribute("aria-current", String(v === "mala" || v === "destilar"));
     if (v === "mala") carregarMala();
     window.scrollTo(0, 0);
   }
@@ -1092,6 +1170,16 @@
     var acoes = document.createElement("div");
     acoes.className = "viv-acoes";
 
+    var bDest = document.createElement("button");
+    bDest.type = "button";
+    bDest.className = "btn-tiny";
+    bDest.style.background = "var(--action)";
+    bDest.style.color = "var(--action-ink)";
+    bDest.textContent = g.viv.destilacao ? "Ver destilação" : "Destilar";
+    bDest.disabled = g.caps.length === 0;
+    bDest.addEventListener("click", function () { abrirDestilacao(g); });
+    acoes.appendChild(bDest);
+
     var bCopiar = document.createElement("button");
     bCopiar.type = "button";
     bCopiar.className = "btn-ghost btn-tiny";
@@ -1142,31 +1230,55 @@
     hora.textContent = diasDesde(c.criadaEm) >= 1 ? diaMes(c.criadaEm) : hhmm(c.criadaEm);
     li.appendChild(hora);
 
+    var corpo = document.createElement("div");
+    corpo.className = "cap-corpo";
+
     if (c.texto) {
       var p = document.createElement("p");
       p.className = "cap-texto";
       p.textContent = c.texto;
-      li.appendChild(p);
+      corpo.appendChild(p);
+
+      // Transcrição de voz fica longa. Mostra o começo e abre sob toque.
+      if (c.texto.length > 320) {
+        var abrir = document.createElement("button");
+        abrir.type = "button";
+        abrir.className = "cap-mais";
+        abrir.textContent = "ler tudo";
+        var alterna = function () {
+          var aberta = p.classList.toggle("aberta");
+          abrir.textContent = aberta ? "recolher" : "ler tudo";
+        };
+        abrir.addEventListener("click", alterna);
+        p.addEventListener("click", alterna);
+        corpo.appendChild(abrir);
+      }
     }
 
     // Uma captura pode trazer dezenas de fotos. Mostra algumas e conta o resto,
     // para a linha não virar uma parede de miniaturas no celular.
     var fotos = c.fotos || [];
-    fotos.slice(0, 6).forEach(function (f) {
-      var img = document.createElement("img");
-      img.className = "cap-foto";
-      img.src = f.url || ("/_blob/" + f.id);
-      img.alt = "Foto anexada";
-      img.loading = "lazy";
-      li.appendChild(img);
-    });
-    if (fotos.length > 6) {
-      var mais = document.createElement("span");
-      mais.className = "cap-hora";
-      mais.style.width = "auto";
-      mais.textContent = "+" + (fotos.length - 6) + " fotos";
-      li.appendChild(mais);
+    if (fotos.length) {
+      var faixa = document.createElement("div");
+      faixa.className = "cap-fotos";
+      fotos.slice(0, 6).forEach(function (f) {
+        var img = document.createElement("img");
+        img.className = "cap-foto";
+        img.src = f.url || ("/_blob/" + f.id);
+        img.alt = "Foto anexada";
+        img.loading = "lazy";
+        faixa.appendChild(img);
+      });
+      if (fotos.length > 6) {
+        var mais = document.createElement("span");
+        mais.className = "cap-mais";
+        mais.textContent = "+" + (fotos.length - 6) + " fotos";
+        faixa.appendChild(mais);
+      }
+      corpo.appendChild(faixa);
     }
+
+    li.appendChild(corpo);
 
     var del = document.createElement("button");
     del.type = "button";
@@ -1203,6 +1315,176 @@
     });
     return linhas.join("\n");
   }
+
+  /* ---------------- destilar ---------------- */
+
+  var MODELO = [
+    "# [Título da vivência]",
+    "",
+    "- Data:",
+    "- Tipo: visita | evento | estudo",
+    "- Local ou fonte:",
+    "- Tags:",
+    "",
+    "## Em 5 linhas",
+    "O fato, a surpresa, o contraste, a tese que isso permite defender, o que muda.",
+    "",
+    "## O que vi (fatos)",
+    "",
+    "## O que me surpreendeu",
+    "",
+    "## Contraste e o que não funcionou",
+    "",
+    "## Falas originais",
+    "- [FALA] \"...\"",
+    "",
+    "## Ideias lapidadas",
+    "- [LAPIDADO] ...",
+    "- [SUGESTÃO] ...",
+    "",
+    "## Conexões",
+    "- Turma:",
+    "- Cliente:",
+    "- Palestra:",
+    "",
+    "## Perguntas em aberto",
+    "",
+    "## Material capturado",
+    "- Fotos:"
+  ].join("\n");
+
+  function promptDestilacao(g, bruto) {
+    return [
+      "Você é o sistema Bagagem, da Nay. Sua tarefa é destilar uma vivência bruta no arquivo vivencia.md,",
+      "que é a peça mais importante do acervo dela. Devolva SÓ o markdown, sem comentário antes ou depois.",
+      "",
+      "REGRAS DE ESCRITA, todas obrigatórias:",
+      "1. Tom da Nay: natural, inteligente, direto, humano, didático e estratégico. Parece escrito por ela.",
+      "2. NUNCA use travessão. Nem o curto nem o longo. Use vírgula, ponto ou dois pontos.",
+      "3. Sem cara de IA: nada de 'vale ressaltar', 'no cenário atual', 'genuinamente', listas de três",
+      "   adjetivos, nem conclusão motivacional.",
+      "4. Marcação de autoria, sagrada:",
+      "   [FALA] só para o que ela disse literalmente no material bruto, copiado sem retoque.",
+      "   [LAPIDADO] versão melhorada de algo que ela de fato disse.",
+      "   [SUGESTÃO] ideia sua. Nunca apresente [SUGESTÃO] como pensamento dela.",
+      "5. Teste de genérico: se trocar 'Nay' por qualquer outra palestrante e o texto continuar funcionando,",
+      "   está genérico. Refaça puxando detalhe concreto do material bruto.",
+      "6. Em 'Contraste e o que não funcionou', procure de verdade. Sem isso o texto vira propaganda do lugar.",
+      "   Se o material não trouxer contraste, escreva que não apareceu e transforme isso em pergunta em aberto.",
+      "7. Não invente fato, número, nome nem fala que não esteja no bruto. Faltou informação, isso vira",
+      "   linha em 'Perguntas em aberto'.",
+      "",
+      "MODELO a seguir na estrutura, preenchido com o conteúdo real:",
+      MODELO,
+      "",
+      "Depois do markdown do modelo, acrescente duas seções finais:",
+      "",
+      "## 3 perguntas de aprofundamento",
+      "Perguntas que puxam opinião, não descrição. Do tipo 'o que isso contradiz no que você falava antes'.",
+      "",
+      "## 3 outputs mais fortes",
+      "Uma linha cada: qual formato, para quem, por quê.",
+      "",
+      "DADOS DA VIVÊNCIA",
+      "Título: " + (g.viv.titulo || g.viv.pasta),
+      "Pasta: acervo/" + g.viv.pasta,
+      "Fotos capturadas: " + g.caps.reduce(function (n, c) { return n + ((c.fotos || []).length); }, 0),
+      "",
+      "MATERIAL BRUTO, transcrito por voz no celular, com os erros de ditado que isso traz:",
+      bruto
+    ].join("\n");
+  }
+
+  function abrirDestilacao(g) {
+    state.destilando = g;
+    mostrar("destilar");
+    $("dest-titulo").textContent = g.viv.titulo || g.viv.pasta;
+    var totalFotos = g.caps.reduce(function (n, c) { return n + ((c.fotos || []).length); }, 0);
+    $("dest-sub").textContent = "acervo/" + g.viv.pasta + "  ·  " + g.caps.length +
+      (g.caps.length === 1 ? " captura" : " capturas") +
+      (totalFotos ? "  ·  " + totalFotos + " fotos" : "");
+    $("dest-texto").value = g.viv.destilacao || "";
+    $("btn-destilar").textContent = g.viv.destilacao ? "Destilar de novo" : "Destilar";
+    $("btn-dest-baixar").hidden = !state.downloads;
+    $("dest-status").hidden = true;
+  }
+
+  function destilar() {
+    var g = state.destilando;
+    if (!g) return;
+    if (!state.sample) {
+      status("A destilação precisa do Claude e ele não está disponível nesta tela. Use Copiar markdown na mala e rode /pos.");
+      return;
+    }
+    if ($("dest-texto").value.trim() &&
+        !confirm("Isso substitui o texto que está aí. Continuar?")) return;
+
+    var bruto = g.caps.map(function (c) {
+      var d = new Date(c.criadaEm);
+      return "[" + d.toLocaleDateString("pt-BR") + " " + hhmm(c.criadaEm) +
+        (c.origem === "aprofundamento" ? ", resposta a pergunta de aprofundamento" : "") + "]\n" + (c.texto || "");
+    }).join("\n\n");
+
+    var btn = $("btn-destilar");
+    btn.disabled = true;
+    btn.textContent = "Destilando...";
+    status("Lendo " + g.caps.length + " capturas. Isso leva de trinta segundos a dois minutos.");
+    $("dest-texto").value = "";
+
+    state.sample(promptDestilacao(g, bruto), {
+      modelTier: "complex",
+      onText: function (e) { $("dest-texto").value = e.text; }
+    }).then(function (r) {
+      $("dest-texto").value = (r.text || "").trim();
+      status(r.truncated
+        ? "Veio cortado por tamanho. Guarde o que serve e destile o resto em partes."
+        : "Pronto. Leia, corrija o que não soa como você, e guarde.");
+    }).catch(function (e) {
+      var c = e && e.code;
+      if (e && e.text) $("dest-texto").value = e.text;
+      if (c === "not_granted") status("Você recusou o acesso ao Claude nesta página. Recarregue para escolher de novo.");
+      else if (c === "rate_limited") status("Muitas chamadas seguidas. Espere um minuto e tente de novo.");
+      else status("Não consegui destilar agora (" + c + "). O bruto continua guardado.");
+    }).finally(function () {
+      btn.disabled = false;
+      btn.textContent = "Destilar de novo";
+    });
+  }
+
+  function status(msg) {
+    $("dest-status").hidden = false;
+    $("dest-status").textContent = msg;
+  }
+
+  $("btn-destilar").addEventListener("click", destilar);
+  $("btn-dest-voltar").addEventListener("click", function () { mostrar("mala"); });
+
+  $("btn-dest-salvar").addEventListener("click", function () {
+    var g = state.destilando;
+    var txt = $("dest-texto").value.trim();
+    if (!g || !txt || !state.db) { toast("Não tem o que guardar."); return; }
+    state.db.doc("vivencias/" + g.viv.pasta).update({
+      destilacao: txt,
+      destiladaEm: new Date().toISOString()
+    }).then(function () {
+      g.viv.destilacao = txt;
+      toast("Destilação guardada.");
+    }).catch(function (e) { toast(mensagemErro(e)); });
+  });
+
+  $("btn-dest-copiar").addEventListener("click", function () {
+    copiar($("dest-texto").value).then(
+      function () { toast("Copiado."); },
+      function () { toast("Não consegui copiar aqui. Selecione o texto à mão."); }
+    );
+  });
+
+  $("btn-dest-baixar").addEventListener("click", function () {
+    var g = state.destilando;
+    if (!g || !state.downloads) return;
+    state.downloads.save({ filename: g.viv.pasta + "-vivencia.md", data: $("dest-texto").value })
+      .catch(function () { toast("Download recusado."); });
+  });
 
   function copiar(txt) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
