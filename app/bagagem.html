@@ -534,6 +534,36 @@
     border-top-color: var(--tab-ink-on);
   }
 
+  .diag {
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .diag summary {
+    cursor: pointer;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .diag-linha {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .diag-linha strong {
+    color: var(--ink);
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
   .versao {
     text-align: center;
     font-size: 11px;
@@ -655,6 +685,15 @@
         <p class="helper" style="margin-top:8px">Isto não é o acervo. É o que ainda não virou <strong>vivencia.md</strong>. Toque em <strong>Destilar</strong> para transformar as capturas em vivência estruturada.</p>
       </div>
       <div id="lista-mala"></div>
+
+      <details class="diag" id="diag">
+        <summary>Diagnóstico</summary>
+        <div id="diag-corpo"></div>
+        <div class="row" style="margin-top:12px">
+          <button type="button" class="btn-ghost btn-tiny" id="btn-diag-recarregar">Tentar de novo</button>
+          <button type="button" class="btn-ghost btn-tiny" id="btn-diag-copiar">Copiar diagnóstico</button>
+        </div>
+      </details>
     </section>
 
     <!-- ============ DESTILAR ============ -->
@@ -682,7 +721,7 @@
     </section>
   </main>
 
-  <p class="versao" id="versao">Bagagem de Mão v3</p>
+  <p class="versao" id="versao">Bagagem de Mão v4</p>
 
   <nav class="tabs">
     <button type="button" id="tab-capturar" aria-current="true">Capturar</button>
@@ -709,6 +748,35 @@
   };
 
   var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------------- diagnóstico ----------------
+     Quando algo não aparece, a tela precisa dizer o que ela viu, em vez de
+     deixar a gente adivinhar por mensagem trocada. */
+  var diag = {
+    linhas: [],
+    set: function (chave, valor) {
+      var achou = false;
+      this.linhas.forEach(function (l) { if (l[0] === chave) { l[1] = valor; achou = true; } });
+      if (!achou) this.linhas.push([chave, valor]);
+      this.pintar();
+    },
+    pintar: function () {
+      var alvo = $("diag-corpo");
+      if (!alvo) return;
+      alvo.innerHTML = "";
+      this.linhas.forEach(function (l) {
+        var li = document.createElement("div");
+        li.className = "diag-linha";
+        var k = document.createElement("span");
+        k.textContent = l[0];
+        var v = document.createElement("strong");
+        v.textContent = l[1];
+        li.appendChild(k);
+        li.appendChild(v);
+        alvo.appendChild(li);
+      });
+    }
+  };
 
   /* ---------------- utilidades ---------------- */
 
@@ -789,6 +857,14 @@
 
   $("tab-capturar").addEventListener("click", function () { mostrar("capturar"); });
   $("tab-mala").addEventListener("click", function () { mostrar("mala"); });
+
+  $("btn-diag-recarregar").addEventListener("click", carregarMala);
+
+  $("btn-diag-copiar").addEventListener("click", function () {
+    var txt = diag.linhas.map(function (l) { return l[0] + ": " + l[1]; }).join("\n");
+    copiar(txt).then(function () { toast("Diagnóstico copiado. Cola pro Claude."); },
+                     function () { toast("Não consegui copiar. Tira um print."); });
+  });
 
   /* ---------------- formulário ---------------- */
 
@@ -1054,46 +1130,69 @@
   }
 
   function carregarMala() {
-    if (!state.db) {
-      falhaMala("A página não conseguiu se conectar ao guardado. Recarregue.");
+    // O banco chega por promise, sempre depois do primeiro desenho da página.
+    // Tocar em A mala antes disso caía num estado sem banco e não tentava de
+    // novo, então aqui a gente espera a promise em vez de olhar state.db.
+    if (!state.dbPronto) {
+      falhaMala("Esta página não está rodando dentro do Claude, então não tem onde guardar.");
       return;
     }
 
-    // Relê a lista na hora em vez de confiar no estado da inscrição: se o
-    // snapshot não tiver chegado, a mala mostrava vazio como se não houvesse nada.
-    state.db.collection("vivencias").limit(300).get()
-      .then(function (snap) {
-        var abertas = snap.docs
-          .map(function (d) {
-            var data = d.data() || {};
-            data.pasta = data.pasta || d.id;
-            return data;
-          })
-          .filter(function (v) { return v.status !== "desfeita"; });
+    diag.set("clicou", "abriu a mala às " + hhmm(new Date().toISOString()));
+    $("lista-mala").innerHTML = "<div class=\"vazio\"><p>Abrindo a mala...</p></div>";
 
-        if (abertas.length === 0) { renderMala([]); return null; }
+    state.dbPronto.then(function (db) {
+      if (!db) {
+        diag.set("db", "indisponível");
+        falhaMala("O guardado não está disponível nesta visualização.");
+        return null;
+      }
+      diag.set("db", "conectado");
+      return db.collection("vivencias").limit(300).get()
+        .then(function (snap) { return { snap: snap, db: db }; });
+    }).then(function (r) {
+      if (!r) return null;
+      var snap = r.snap;
+      diag.set("vivencias lidas", String(snap.docs.length));
+      diag.set("origem", snap.metadata && snap.metadata.fromCache ? "cache local" : "servidor");
 
-        return Promise.all(abertas.map(function (v) {
-          return state.db.collection("vivencias/" + v.pasta + "/capturas").limit(300).get()
-            .then(function (s) {
-              var caps = s.docs.map(function (d) {
-                var data = d.data() || {};
-                data.__id = d.id;
-                return data;
-              });
-              caps.sort(function (a, b) {
-                return (a.criadaEm || "").localeCompare(b.criadaEm || "");
-              });
-              return { viv: v, caps: caps };
-            })
-            .catch(function (e) {
-              // Uma vivência ilegível não pode esconder as outras, mas também
-              // não some em silêncio: entra na lista marcada.
-              return { viv: v, caps: [], erro: mensagemErro(e) };
+      var todas = snap.docs.map(function (d) {
+        var data = d.data() || {};
+        data.pasta = data.pasta || d.id;
+        return data;
+      });
+      diag.set("titulos", todas.map(function (v) { return v.titulo || v.pasta; }).join(", ") || "nenhum");
+
+      var abertas = todas.filter(function (v) { return v.status !== "desfeita"; });
+      diag.set("na mala", String(abertas.length) + " de " + todas.length);
+
+      if (abertas.length === 0) { renderMala([]); return null; }
+
+      return Promise.all(abertas.map(function (v) {
+        return r.db.collection("vivencias/" + v.pasta + "/capturas").limit(300).get()
+          .then(function (s) {
+            var caps = s.docs.map(function (d) {
+              var data = d.data() || {};
+              data.__id = d.id;
+              return data;
             });
-        })).then(renderMala);
-      })
-      .catch(function (e) { falhaMala(mensagemErro(e)); });
+            caps.sort(function (a, b) {
+              return (a.criadaEm || "").localeCompare(b.criadaEm || "");
+            });
+            diag.set("capturas em " + v.pasta, String(caps.length));
+            return { viv: v, caps: caps };
+          })
+          .catch(function (e) {
+            // Uma vivência ilegível não pode esconder as outras, mas também
+            // não some em silêncio: entra na lista marcada.
+            diag.set("erro em " + v.pasta, (e && e.code) || "desconhecido");
+            return { viv: v, caps: [], erro: mensagemErro(e) };
+          });
+      })).then(renderMala);
+    }).catch(function (e) {
+      diag.set("erro ao ler", (e && e.code) || (e && e.message) || "desconhecido");
+      falhaMala(mensagemErro(e));
+    });
   }
 
   function renderMala(grupos) {
@@ -1110,8 +1209,13 @@
         "<p>Bom sinal. Quer dizer que você desfez tudo.</p>" +
         "<p class=\"frase\">Use tecnologia para liberar tempo. Use o tempo pra viver experiências reais.</p>";
       alvo.appendChild(vazio);
+      // Vazio pode ser verdade ou pode ser falha de leitura. Abre o diagnóstico
+      // para a tela dizer qual dos dois.
+      $("diag").open = true;
       return;
     }
+
+    $("diag").open = false;
 
     function ultimoToque(g) {
       if (!g.caps.length) return g.viv.criadaEm || "";
@@ -1536,13 +1640,21 @@
     $("texto").value = lerRascunho();
     atualizarNovaWrap();
 
+    diag.set("versão", "v4");
+    diag.set("window.claude", (window.claude && window.claude.use) ? "presente" : "ausente");
+
     if (!window.claude || !window.claude.use) {
       aviso("Esta página só guarda de verdade quando aberta pelo link publicado do Claude. Aqui o que você escrever fica só nesta tela.");
       return;
     }
 
-    window.claude.use("db").then(function (db) {
+    var t0 = Date.now();
+    state.dbPronto = window.claude.use("db");
+
+    state.dbPronto.then(function (db) {
+      diag.set("use(db) levou", (Date.now() - t0) + " ms");
       if (!db) {
+        diag.set("db", "null, não disponível nesta visualização");
         aviso("Não consegui abrir o guardado. Escreva mesmo assim e copie o texto antes de fechar.");
         return;
       }
@@ -1557,10 +1669,12 @@
         }).sort(function (a, b) {
           return (b.criadaEm || "").localeCompare(a.criadaEm || "");
         });
+        diag.set("inscrição ao vivo", snap.docs.length + " vivências");
         renderSelect();
         atualizarChip();
         if (state.view === "mala") carregarMala();
       }, function (e) {
+        diag.set("inscrição ao vivo", "falhou: " + (e && e.code));
         aviso("A lista de vivências parou de atualizar sozinha (" + (e && e.code) + "). O que você guardar continua sendo salvo, e a aba A mala relê tudo ao abrir.");
       });
     });
