@@ -507,11 +507,116 @@
 
   /* ---------- abas ---------- */
 
+  .bloco-ger {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 15px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .saida-cab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .grade-ger {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 9px;
+  }
+
+  .ger {
+    text-align: left;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 11px 12px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 14.5px;
+    line-height: 1.3;
+  }
+
+  .ger b {
+    display: block;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 17px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .ger small {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+  }
+
+  .ger.interno { border-color: var(--warm); }
+
+  .btn-voltar {
+    background: none;
+    border: none;
+    padding: 0 0 6px;
+    color: var(--ink-soft);
+    font-family: "Roboto", sans-serif;
+    font-size: 13.5px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .saida-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+
+  .saida-item:last-child { border-bottom: none; }
+
+  .fala {
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  .fala.eu {
+    background: var(--brand);
+    color: #F7F3EE;
+    margin-left: 32px;
+  }
+
+  :root:not([data-theme="light"]) .fala.eu { color: #F7F3EE; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .fala.eu { background: #4B0082; }
+  }
+
+  :root[data-theme="dark"] .fala.eu { background: #4B0082; }
+
+  .fala.sistema {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    margin-right: 20px;
+  }
+
   .tabs {
     position: sticky;
     bottom: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     background: var(--surface);
     border-top: 1px solid var(--line);
     padding-bottom: env(safe-area-inset-bottom, 0);
@@ -623,7 +728,7 @@
         <path d="M181.563 183.133C109.004 225.18 67.3847 288.95 88.6039 325.567C109.823 362.184 185.845 357.782 258.404 315.735C330.963 273.687 372.582 209.917 351.363 173.301C330.144 136.684 254.122 141.086 181.563 183.133Z"/>
       </g>
     </svg>
-    <div class="wordmark">Bagagem<span>Caixa de entrada</span></div>
+    <div class="wordmark">Bagagem<span>Repertório</span></div>
     <div class="mala-chip" id="chip">na mala: 0</div>
   </header>
 
@@ -696,36 +801,72 @@
       </details>
     </section>
 
-    <!-- ============ DESTILAR ============ -->
+    <!-- ============ UMA VIVÊNCIA ============ -->
     <section class="view" id="view-destilar" hidden>
       <div>
-        <p class="eyebrow">Desfazendo a mala</p>
+        <button type="button" class="btn-voltar" id="btn-dest-voltar">voltar ao acervo</button>
         <h2 id="dest-titulo">Vivência</h2>
         <p class="helper" style="margin-top:8px" id="dest-sub"></p>
       </div>
 
-      <div class="row">
+      <div class="bloco-ger">
+        <p class="eyebrow">1. A base</p>
+        <p class="helper">A destilação é o que todos os outputs leem. Sem ela, o resto sai raso.</p>
         <button type="button" class="btn-primary" id="btn-destilar">Destilar</button>
-        <button type="button" class="btn-ghost" id="btn-dest-voltar">Voltar</button>
+      </div>
+
+      <div class="bloco-ger">
+        <p class="eyebrow">2. Gerar a partir dela</p>
+        <div class="grade-ger" id="grade-geradores"></div>
       </div>
 
       <p class="helper" id="dest-status" hidden></p>
 
-      <textarea id="dest-texto" style="min-height:420px;font-size:14px" placeholder="O vivencia.md aparece aqui. Você pode editar antes de guardar."></textarea>
+      <div class="bloco-ger" id="painel-saida">
+        <div class="saida-cab">
+          <p class="eyebrow" id="saida-rotulo">Resultado</p>
+          <button type="button" class="btn-tiny btn-ghost" id="btn-parar" hidden>Parar</button>
+        </div>
+        <textarea id="dest-texto" style="min-height:380px;font-size:14px" placeholder="Toque em Destilar ou num gerador. O resultado aparece aqui e pode ser editado antes de guardar."></textarea>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btn-dest-salvar">Guardar</button>
+          <button type="button" class="btn-ghost" id="btn-dest-copiar">Copiar</button>
+          <button type="button" class="btn-ghost" id="btn-dest-baixar" hidden>Baixar .md</button>
+        </div>
+      </div>
 
-      <div class="row">
-        <button type="button" class="btn-primary" id="btn-dest-salvar">Guardar destilação</button>
-        <button type="button" class="btn-ghost" id="btn-dest-copiar">Copiar</button>
-        <button type="button" class="btn-ghost" id="btn-dest-baixar" hidden>Baixar .md</button>
+      <div class="bloco-ger">
+        <p class="eyebrow">Já gerado</p>
+        <div id="lista-saidas"></div>
+      </div>
+    </section>
+
+    <!-- ============ PERGUNTAR ============ -->
+    <section class="view" id="view-perguntar" hidden>
+      <div>
+        <p class="eyebrow">Sobre tudo que você viveu</p>
+        <h2>Perguntar</h2>
+        <p class="helper" style="margin-top:8px" id="perg-base">Carregando o acervo...</p>
+      </div>
+
+      <div id="conversa"></div>
+
+      <div class="bloco-ger">
+        <textarea id="perg-texto" style="min-height:90px" placeholder="O que Shenzhen me ensinou que serve pra indústria? Que vivência eu tenho sobre privacidade?"></textarea>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btn-perguntar">Perguntar</button>
+          <button type="button" class="btn-ghost" id="btn-limpar-conversa">Limpar conversa</button>
+        </div>
       </div>
     </section>
   </main>
 
-  <p class="versao" id="versao">Bagagem de Mão v5</p>
+  <p class="versao" id="versao">Bagagem de Mão v6</p>
 
   <nav class="tabs">
     <button type="button" id="tab-capturar" aria-current="true">Capturar</button>
-    <button type="button" id="tab-mala">A mala</button>
+    <button type="button" id="tab-mala">Acervo</button>
+    <button type="button" id="tab-perguntar">Perguntar</button>
   </nav>
 </div>
 
@@ -744,7 +885,10 @@
     anexos: [],
     view: "capturar",
     ultimaCaptura: null,
-    destilando: null
+    destilando: null,
+    abortar: null,
+    acervo: null,
+    dbPronto: null
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -848,15 +992,19 @@
     $("view-capturar").hidden = v !== "capturar";
     $("view-mala").hidden = v !== "mala";
     $("view-destilar").hidden = v !== "destilar";
+    $("view-perguntar").hidden = v !== "perguntar";
     $("tab-capturar").setAttribute("aria-current", String(v === "capturar"));
-    // Destilar é uma subtela da mala, então a aba continua marcada.
+    // A tela de uma vivência é subtela do acervo, então a aba continua marcada.
     $("tab-mala").setAttribute("aria-current", String(v === "mala" || v === "destilar"));
+    $("tab-perguntar").setAttribute("aria-current", String(v === "perguntar"));
     if (v === "mala") carregarMala();
+    if (v === "perguntar") atualizarBasePergunta();
     window.scrollTo(0, 0);
   }
 
   $("tab-capturar").addEventListener("click", function () { mostrar("capturar"); });
   $("tab-mala").addEventListener("click", function () { mostrar("mala"); });
+  $("tab-perguntar").addEventListener("click", function () { mostrar("perguntar"); });
 
   $("btn-diag-recarregar").addEventListener("click", carregarMala);
 
@@ -1458,6 +1606,86 @@
     "- Fotos:"
   ].join("\n");
 
+  // Regras que valem para tudo que sai daqui. Vêm do CLAUDE.md.
+  var REGRAS = [
+    "Você escreve para a Nay, palestrante e fundadora da VIO FUTURO.",
+    "",
+    "REGRAS OBRIGATÓRIAS:",
+    "1. Tom dela: natural, inteligente, direto, humano, didático e estratégico. Parece escrito por ela.",
+    "2. NUNCA use travessão, nem curto nem longo. Use vírgula, ponto ou dois pontos.",
+    "3. Sem cara de IA: nada de 'vale ressaltar', 'no cenário atual', 'genuinamente', listas de três",
+    "   adjetivos, nem fecho motivacional.",
+    "4. Marcação de autoria: [FALA] só para o que ela disse literalmente na vivência, copiado sem retoque.",
+    "   [LAPIDADO] para versão melhorada de algo que ela disse. [SUGESTÃO] para ideia sua.",
+    "   Nunca apresente [SUGESTÃO] como pensamento dela.",
+    "5. Teste de genérico: se trocar 'Nay' por qualquer outra palestrante e o texto continuar funcionando,",
+    "   está genérico. Refaça puxando detalhe concreto da vivência.",
+    "6. Não invente fato, número, nome nem fala que não esteja na vivência. Faltou dado, diga que faltou."
+  ].join("\n");
+
+  var SIGILO_PUBLICO = [
+    "",
+    "CONFIDENCIALIDADE: este material é público. Nunca cite cliente pelo nome nem dado interno de cliente.",
+    "Se a vivência conectar com um cliente, use a ideia de forma anônima, como 'uma transportadora'."
+  ].join("\n");
+
+  var SIGILO_INTERNO = [
+    "",
+    "CONFIDENCIALIDADE: este material é interno, não vai para rede social nem palestra aberta."
+  ].join("\n");
+
+  var GERADORES = [
+    {
+      id: "frases", nome: "Frases", desc: "autorais, com a fala de origem", publico: true,
+      instrucao: "Extraia de 6 a 10 frases autorais desta vivência.\n" +
+        "Para cada uma: a frase lapidada pronta para palco ou post, e logo abaixo, entre parênteses,\n" +
+        "a fala original de onde ela saiu, copiada literal. Frase que não vier de fala dela entra como [SUGESTÃO].\n" +
+        "Frase autoral não sai do lugar, sai do olhar dela sobre o lugar. Nada de máxima de autoajuda."
+    },
+    {
+      id: "linkedin", nome: "LinkedIn", desc: "post no seu tom", publico: true,
+      instrucao: "Escreva um post de LinkedIn. Primeira linha é gancho concreto, uma cena ou um número da vivência,\n" +
+        "nunca pergunta retórica. Corpo de 4 a 7 parágrafos curtos que sustentam uma tese, não um relato de turista.\n" +
+        "Fecha com uma provocação real, sem 'e você, o que acha'. Sem hashtag genérica, no máximo três específicas.\n" +
+        "Depois do post, em bloco separado, um prompt de imagem para acompanhar."
+    },
+    {
+      id: "carrossel", nome: "Carrossel", desc: "roteiro card a card", publico: true,
+      instrucao: "Monte um roteiro de carrossel de 8 a 10 cards. Para cada card: número, o texto que vai nele\n" +
+        "(curto, cabe na tela) e, em itálico, a orientação visual. Card 1 é gancho, o último é fecho com tese.\n" +
+        "Cada card avança o argumento, nada de repetir a mesma ideia com outras palavras."
+    },
+    {
+      id: "instagram", nome: "Instagram", desc: "nos 3 perfis", publico: true,
+      instrucao: "Roteie esta vivência nos três Instagrams dela: o pessoal de palestrante, o da VIO Futuro,\n" +
+        "e o Experiência Mês a Mês. Para cada perfil: o ângulo que faz sentido ali, o formato sugerido\n" +
+        "(reels, carrossel, foto única), a legenda pronta e o que capturar se faltar imagem.\n" +
+        "Se a vivência não servir para algum dos perfis, diga isso em vez de forçar."
+    },
+    {
+      id: "palestra", nome: "Palestra", desc: "história estruturada", publico: true,
+      instrucao: "Escreva um trecho de palestra de 4 a 6 minutos com esta vivência.\n" +
+        "Estruture como história: a cena de entrada, a tensão, a virada, a tese que fica.\n" +
+        "Marque onde ela deve pausar e onde a plateia deve rir ou travar.\n" +
+        "Diga no fim em que momento da palestra esse bloco encaixa e o que ele prepara."
+    },
+    {
+      id: "aula", nome: "Aula", desc: "conteúdo e dinâmica", publico: false,
+      instrucao: "Monte um bloco de aula com esta vivência: o conceito que ela ilustra, como contar o caso,\n" +
+        "dois exemplos de aplicação no contexto brasileiro, uma dinâmica de sala com tempo estimado,\n" +
+        "e três perguntas de discussão que não têm resposta óbvia.\n" +
+        "Não existe ficha de turma preenchida ainda, então diga o que precisaria saber da turma para adaptar."
+    },
+    {
+      id: "cliente", nome: "Cliente", desc: "insight aplicado, interno", publico: false,
+      instrucao: "Escreva de 3 a 5 insights desta vivência aplicados ao negócio do cliente citado nas conexões\n" +
+        "da vivência. Para cada insight: o que foi visto, o que isso significa para ele, e o que dá para fazer\n" +
+        "na segunda-feira de manhã, concreto, não recomendação genérica.\n" +
+        "Feche com a pergunta que ela deve levar para a próxima reunião com ele.\n" +
+        "Se a vivência não nomear cliente nenhum, diga isso e pare."
+    }
+  ];
+
   function promptDestilacao(g, bruto) {
     return [
       "Você é o sistema Bagagem, da Nay. Sua tarefa é destilar uma vivência bruta no arquivo vivencia.md,",
@@ -1509,9 +1737,14 @@
       (g.caps.length === 1 ? " captura" : " capturas") +
       (totalFotos ? "  ·  " + totalFotos + " fotos" : "");
     $("dest-texto").value = g.viv.destilacao || "";
+    $("dest-texto").dataset.tipo = "destilacao";
+    marcarLimpo();
+    $("saida-rotulo").textContent = g.viv.destilacao ? "Destilação guardada" : "Resultado";
     $("btn-destilar").textContent = g.viv.destilacao ? "Destilar de novo" : "Destilar";
     $("btn-dest-baixar").hidden = !state.downloads;
     $("dest-status").hidden = true;
+    renderGeradores();
+    carregarSaidas(g);
   }
 
   function destilar() {
@@ -1521,8 +1754,7 @@
       status("A destilação precisa do Claude e ele não está disponível nesta tela. Use Copiar markdown na mala e rode /pos.");
       return;
     }
-    if ($("dest-texto").value.trim() &&
-        !confirm("Isso substitui o texto que está aí. Continuar?")) return;
+    if (painelSujo() && !confirm("O que está no painel ainda não foi guardado. Substituir?")) return;
 
     var bruto = g.caps.map(function (c) {
       var d = new Date(c.criadaEm);
@@ -1533,24 +1765,7 @@
     var btn = $("btn-destilar");
     btn.disabled = true;
     btn.textContent = "Destilando...";
-    status("Lendo " + g.caps.length + " capturas. Isso leva de trinta segundos a dois minutos.");
-    $("dest-texto").value = "";
-
-    state.sample(promptDestilacao(g, bruto), {
-      modelTier: "complex",
-      onText: function (e) { $("dest-texto").value = e.text; }
-    }).then(function (r) {
-      $("dest-texto").value = (r.text || "").trim();
-      status(r.truncated
-        ? "Veio cortado por tamanho. Guarde o que serve e destile o resto em partes."
-        : "Pronto. Leia, corrija o que não soa como você, e guarde.");
-    }).catch(function (e) {
-      var c = e && e.code;
-      if (e && e.text) $("dest-texto").value = e.text;
-      if (c === "not_granted") status("Você recusou o acesso ao Claude nesta página. Recarregue para escolher de novo.");
-      else if (c === "rate_limited") status("Muitas chamadas seguidas. Espere um minuto e tente de novo.");
-      else status("Não consegui destilar agora (" + c + "). O bruto continua guardado.");
-    }).finally(function () {
+    rodarSample(promptDestilacao(g, bruto), "Destilação", "destilacao").finally(function () {
       btn.disabled = false;
       btn.textContent = "Destilar de novo";
     });
@@ -1561,6 +1776,232 @@
     $("dest-status").textContent = msg;
   }
 
+  /* ---------------- geradores ---------------- */
+
+  function renderGeradores() {
+    var grade = $("grade-geradores");
+    grade.innerHTML = "";
+    GERADORES.forEach(function (ger) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "ger" + (ger.publico ? "" : " interno");
+      b.innerHTML = "";
+      var t = document.createElement("b");
+      t.textContent = ger.nome;
+      var d = document.createElement("small");
+      d.textContent = ger.desc + (ger.publico ? "" : " · interno");
+      b.appendChild(t);
+      b.appendChild(d);
+      b.addEventListener("click", function () { gerar(ger); });
+      grade.appendChild(b);
+    });
+  }
+
+  function gerar(ger) {
+    var g = state.destilando;
+    if (!g) return;
+    if (!state.sample) { status("O Claude não está disponível nesta tela."); return; }
+
+    var base = ($("dest-texto").dataset.tipo === "destilacao" && $("dest-texto").value.trim())
+      ? $("dest-texto").value.trim()
+      : (g.viv.destilacao || "");
+
+    if (!base) {
+      status("Destile primeiro. Todo gerador lê a destilação, não o áudio cru.");
+      return;
+    }
+    if (painelSujo() && !confirm("O que está no painel ainda não foi guardado. Substituir?")) return;
+
+    var prompt = [
+      REGRAS,
+      ger.publico ? SIGILO_PUBLICO : SIGILO_INTERNO,
+      "",
+      "TAREFA",
+      ger.instrucao,
+      "",
+      "VIVÊNCIA (já destilada, esta é a fonte, não invente nada fora dela):",
+      base
+    ].join("\n");
+
+    rodarSample(prompt, ger.nome, ger.id);
+  }
+
+  // Painel sujo é texto gerado que ainda não foi guardado em lugar nenhum.
+  function painelSujo() { return $("dest-texto").dataset.sujo === "1"; }
+  function marcarLimpo() { $("dest-texto").dataset.sujo = "0"; }
+
+  $("dest-texto").addEventListener("input", function () { this.dataset.sujo = "1"; });
+
+  function rodarSample(prompt, rotulo, tipo) {
+    var area = $("dest-texto");
+    area.value = "";
+    area.dataset.tipo = tipo;
+    $("saida-rotulo").textContent = rotulo;
+    status("Escrevendo. Pode levar um minuto.");
+
+    state.abortar = new AbortController();
+    $("btn-parar").hidden = false;
+
+    return state.sample(prompt, {
+      modelTier: "complex",
+      signal: state.abortar.signal,
+      onText: function (e) { area.value = e.text; }
+    }).then(function (r) {
+      area.value = (r.text || "").trim();
+      area.dataset.sujo = "1";
+      status(r.truncated ? "Veio cortado por tamanho. Guarde o que serve." : "Pronto. Ajuste o que não soar como você e guarde.");
+    }).catch(function (e) {
+      var c = e && e.code;
+      if (e && e.text) area.value = e.text;
+      if (c === "cancelled") status("Parado.");
+      else if (c === "not_granted") status("Você recusou o acesso ao Claude. Recarregue para escolher de novo.");
+      else if (c === "rate_limited") status("Muitas chamadas seguidas. Espere um minuto.");
+      else status("Não consegui gerar agora (" + c + ").");
+    }).finally(function () {
+      $("btn-parar").hidden = true;
+      state.abortar = null;
+    });
+  }
+
+  $("btn-parar").addEventListener("click", function () {
+    if (state.abortar) state.abortar.abort();
+  });
+
+  /* ---------------- saídas guardadas ---------------- */
+
+  function carregarSaidas(g) {
+    var alvo = $("lista-saidas");
+    alvo.innerHTML = "<p class=\"helper\">Carregando...</p>";
+    if (!state.db) { alvo.innerHTML = ""; return; }
+
+    state.db.collection("vivencias/" + g.viv.pasta + "/saidas").limit(100).get()
+      .then(function (snap) {
+        alvo.innerHTML = "";
+        if (!snap.docs.length) {
+          alvo.innerHTML = "<p class=\"helper\">Nada gerado ainda a partir desta vivência.</p>";
+          return;
+        }
+        snap.docs.map(function (d) {
+          var o = Object.assign({}, d.data() || {});
+          o.__id = d.id;
+          return o;
+        }).sort(function (a, b) {
+          return (b.criadaEm || "").localeCompare(a.criadaEm || "");
+        }).forEach(function (o) {
+          var li = document.createElement("div");
+          li.className = "saida-item";
+          var nome = document.createElement("span");
+          nome.textContent = o.rotulo + "  ·  " + diaMes(o.criadaEm);
+          var abrir = document.createElement("button");
+          abrir.type = "button";
+          abrir.className = "btn-tiny btn-ghost";
+          abrir.textContent = "abrir";
+          abrir.addEventListener("click", function () {
+            $("dest-texto").value = o.texto || "";
+            $("dest-texto").dataset.tipo = o.tipo || "";
+            $("saida-rotulo").textContent = o.rotulo;
+            marcarLimpo();
+            status("Guardado em " + diaMes(o.criadaEm) + ".");
+            $("painel-saida").scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          li.appendChild(nome);
+          li.appendChild(abrir);
+          alvo.appendChild(li);
+        });
+      })
+      .catch(function () { alvo.innerHTML = "<p class=\"helper\">Não consegui ler o que já foi gerado.</p>"; });
+  }
+
+  /* ---------------- perguntar ---------------- */
+
+  var conversa = [];
+
+  function montarAcervo() {
+    if (!state.db) return Promise.resolve({ texto: "", n: 0 });
+    return state.db.collection("vivencias").limit(300).get().then(function (snap) {
+      var partes = [];
+      var n = 0;
+      snap.docs.forEach(function (d) {
+        var v = d.data() || {};
+        if (!v.destilacao) return;
+        n++;
+        partes.push("===== VIVÊNCIA: " + (v.titulo || d.id) + " (pasta " + d.id + ") =====\n" + v.destilacao);
+      });
+      return { texto: partes.join("\n\n"), n: n };
+    }).catch(function () { return { texto: "", n: 0 }; });
+  }
+
+  function atualizarBasePergunta() {
+    montarAcervo().then(function (a) {
+      state.acervo = a;
+      $("perg-base").textContent = a.n === 0
+        ? "Nenhuma vivência destilada ainda. Destile uma no Acervo e ela passa a responder aqui."
+        : "Respondendo a partir de " + a.n + (a.n === 1 ? " vivência destilada." : " vivências destiladas.") +
+          " Se não tiver vivido sobre o assunto, ele diz isso em vez de inventar.";
+    });
+  }
+
+  function bolha(quem, texto) {
+    var d = document.createElement("div");
+    d.className = "fala " + quem;
+    d.textContent = texto;
+    $("conversa").appendChild(d);
+    d.scrollIntoView({ behavior: "smooth", block: "end" });
+    return d;
+  }
+
+  function perguntar() {
+    var q = $("perg-texto").value.trim();
+    if (!q) return;
+    if (!state.sample) { bolha("sistema", "O Claude não está disponível nesta tela."); return; }
+
+    var acervo = state.acervo || { texto: "", n: 0 };
+    bolha("eu", q);
+    $("perg-texto").value = "";
+    var resp = bolha("sistema", "Procurando no acervo...");
+
+    var sistema = [
+      REGRAS,
+      "",
+      "Você responde perguntas da Nay usando SÓ o acervo abaixo, que é tudo que ela viveu e registrou.",
+      "Regra central: o acervo é a fonte da verdade. Se não houver vivência sobre o assunto perguntado,",
+      "diga isso com todas as letras em vez de completar com conhecimento genérico.",
+      "Sempre diga de qual vivência veio cada coisa que você afirmar.",
+      "Responda curto e direto. Se a pergunta pedir material pronto, mande para o gerador certo no Acervo.",
+      "",
+      acervo.n === 0 ? "ACERVO: vazio, nenhuma vivência destilada ainda." : "ACERVO:\n" + acervo.texto
+    ].join("\n");
+
+    // A primeira mensagem carrega o acervo inteiro; as seguintes só a pergunta,
+    // para os turnos alternarem user e assistant como a chamada exige.
+    var primeira = { role: "user", content: sistema + "\n\nPERGUNTA: " + q };
+    var turnos = conversa.length === 0
+      ? [primeira]
+      : conversa.concat([{ role: "user", content: q }]);
+
+    state.sample(turnos, {
+      modelTier: "complex",
+      cache: false,
+      onText: function (e) { resp.textContent = e.text; }
+    }).then(function (r) {
+      resp.textContent = (r.text || "").trim();
+      conversa.push(conversa.length === 0 ? primeira : { role: "user", content: q });
+      conversa.push({ role: "assistant", content: r.text || "" });
+    }).catch(function (e) {
+      var c = e && e.code;
+      if (e && e.text) { resp.textContent = e.text; return; }
+      resp.textContent = c === "rate_limited"
+        ? "Muitas perguntas seguidas. Espere um minuto."
+        : "Não consegui responder agora (" + c + ").";
+    });
+  }
+
+  $("btn-perguntar").addEventListener("click", perguntar);
+  $("btn-limpar-conversa").addEventListener("click", function () {
+    conversa = [];
+    $("conversa").innerHTML = "";
+  });
+
   $("btn-destilar").addEventListener("click", destilar);
   $("btn-dest-voltar").addEventListener("click", function () { mostrar("mala"); });
 
@@ -1568,12 +2009,32 @@
     var g = state.destilando;
     var txt = $("dest-texto").value.trim();
     if (!g || !txt || !state.db) { toast("Não tem o que guardar."); return; }
-    state.db.doc("vivencias/" + g.viv.pasta).update({
-      destilacao: txt,
-      destiladaEm: new Date().toISOString()
+
+    var tipo = $("dest-texto").dataset.tipo || "";
+
+    // A destilação é a base da vivência e mora nela. Todo o resto é saída.
+    if (tipo === "destilacao") {
+      state.db.doc("vivencias/" + g.viv.pasta).update({
+        destilacao: txt,
+        destiladaEm: new Date().toISOString()
+      }).then(function () {
+        g.viv = Object.assign({}, g.viv, { destilacao: txt });
+        $("btn-destilar").textContent = "Destilar de novo";
+        marcarLimpo();
+        toast("Destilação guardada.");
+      }).catch(function (e) { toast(mensagemErro(e)); });
+      return;
+    }
+
+    state.db.collection("vivencias/" + g.viv.pasta + "/saidas").add({
+      tipo: tipo,
+      rotulo: $("saida-rotulo").textContent,
+      texto: txt,
+      criadaEm: new Date().toISOString()
     }).then(function () {
-      g.viv.destilacao = txt;
-      toast("Destilação guardada.");
+      toast("Guardado em Já gerado.");
+      marcarLimpo();
+      carregarSaidas(g);
     }).catch(function (e) { toast(mensagemErro(e)); });
   });
 
@@ -1641,7 +2102,7 @@
     $("texto").value = lerRascunho();
     atualizarNovaWrap();
 
-    diag.set("versão", "v5");
+    diag.set("versão", "v6");
     diag.set("window.claude", (window.claude && window.claude.use) ? "presente" : "ausente");
 
     if (!window.claude || !window.claude.use) {
