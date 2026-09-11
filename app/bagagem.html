@@ -1,0 +1,2155 @@
+<title>Bagagem de Mão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --ground: #F7F3EE;
+    --surface: #FFFFFF;
+    --surface-2: #F1EAF6;
+    --ink: #300053;
+    --ink-soft: #6B5A7E;
+    --brand: #4B0082;
+    --action: #007A74;
+    --action-ink: #FFFFFF;
+    --warm: #A0522D;
+    --line: #DFD3E8;
+    --line-strong: #C8A8E9;
+    --mark: #4B0082;
+    --shadow: 0 1px 2px rgba(48, 0, 83, .06), 0 8px 24px rgba(48, 0, 83, .07);
+    --tab-ink: #6B5A7E;
+    --tab-ink-on: #4B0082;
+    --field: #FFFFFF;
+  }
+
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #1E0036;
+      --surface: #300053;
+      --surface-2: #3B1063;
+      --ink: #F7F3EE;
+      --ink-soft: #C8A8E9;
+      --brand: #C8A8E9;
+      --action: #C8A8E9;
+      --action-ink: #300053;
+      --warm: #F7F3EE;
+      --line: #4A1C74;
+      --line-strong: #C8A8E9;
+      --mark: #FFFFFF;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+      --tab-ink: #A98FC4;
+      --tab-ink-on: #F7F3EE;
+      --field: #260044;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #1E0036;
+    --surface: #300053;
+    --surface-2: #3B1063;
+    --ink: #F7F3EE;
+    --ink-soft: #C8A8E9;
+    --brand: #C8A8E9;
+    --action: #C8A8E9;
+    --action-ink: #300053;
+    --warm: #F7F3EE;
+    --line: #4A1C74;
+    --line-strong: #C8A8E9;
+    --mark: #FFFFFF;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+    --tab-ink: #A98FC4;
+    --tab-ink-on: #F7F3EE;
+    --field: #260044;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .shell {
+    max-width: 620px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- cabeçalho ---------- */
+
+  /* O cabeçalho é a assinatura da marca: roxo oficial nos dois temas,
+     com texto e símbolo em branco, como manda a regra de contraste. */
+  .top {
+    position: relative;
+    overflow: hidden;
+    background: #4B0082;
+    color: #F7F3EE;
+    padding: 14px 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .orbit {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    color: #FFFFFF;
+  }
+
+  .orbit-bg {
+    position: absolute;
+    right: -70px;
+    top: -110px;
+    width: 260px;
+    height: 260px;
+    color: #FFFFFF;
+    opacity: .13;
+    pointer-events: none;
+  }
+
+  .wordmark {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: .035em;
+    line-height: 1;
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .wordmark span {
+    display: block;
+    font-family: "Roboto", sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    opacity: .72;
+    margin-top: 4px;
+  }
+
+  .mala-chip {
+    margin-left: auto;
+    position: relative;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 14px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, .16);
+    border: 1px solid rgba(255, 255, 255, .3);
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+
+  /* ---------- corpo ---------- */
+
+  main {
+    flex: 1;
+    padding: 20px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .view[hidden] { display: none !important; }
+
+  .eyebrow {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  h2 {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: .01em;
+    margin: 2px 0 0;
+    text-wrap: balance;
+  }
+
+  .field-label {
+    display: block;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+  }
+
+  textarea, input[type="text"], select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--field);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 13px;
+  }
+
+  textarea {
+    min-height: 158px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 19px) calc(50% + 1px), calc(100% - 13px) calc(50% + 1px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 38px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--line-strong);
+    outline-offset: 2px;
+  }
+
+  .block {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .row > * { flex: 1 1 150px; }
+
+  button {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 13px 16px;
+    cursor: pointer;
+    background: var(--surface-2);
+    color: var(--ink);
+    transition: opacity .15s ease;
+  }
+
+  button:disabled { opacity: .45; cursor: default; }
+  button:not(:disabled):active { opacity: .78; }
+
+  .btn-primary {
+    background: var(--action);
+    color: var(--action-ink);
+    font-size: 18px;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--line);
+    color: var(--ink-soft);
+  }
+
+  .btn-tiny {
+    font-size: 14px;
+    padding: 7px 11px;
+    letter-spacing: .06em;
+    flex: 0 0 auto;
+  }
+
+  .helper {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .anexo-strip {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .thumb {
+    position: relative;
+    width: 62px;
+    height: 62px;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    flex: none;
+    background: var(--surface-2);
+  }
+
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .thumb button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 21px;
+    height: 21px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(30, 0, 54, .78);
+    color: #F7F3EE;
+    font-size: 13px;
+    line-height: 1;
+    border: none;
+  }
+
+  /* ---------- pergunta de aprofundamento ---------- */
+
+  .puxada {
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    padding: 15px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .puxada q {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.42;
+    quotes: "“" "”";
+    color: var(--ink);
+  }
+
+  /* ---------- a mala ---------- */
+
+  .viv {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .viv-head {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    padding: 14px 16px 11px;
+    flex-wrap: wrap;
+  }
+
+  .viv-titulo {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0;
+    flex: 1 1 auto;
+  }
+
+  .viv-slug {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    word-break: break-all;
+  }
+
+  .parado {
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 13.5px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--warm);
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 2px 9px;
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .capturas { list-style: none; margin: 0; padding: 0; }
+
+  .cap {
+    display: flex;
+    gap: 11px;
+    padding: 11px 16px;
+    border-top: 1px solid var(--line);
+    align-items: flex-start;
+  }
+
+  .cap-hora {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+    width: 42px;
+    padding-top: 2px;
+  }
+
+  /* min-width:0 é o que impede o texto de ser espremido pelas miniaturas
+     e quebrar uma letra por linha. */
+  .cap-corpo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .cap-texto {
+    font-size: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .cap-texto.aberta {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+
+  .cap-mais {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: inherit;
+    align-self: flex-start;
+  }
+
+  .cap-fotos {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .cap-foto {
+    width: 46px;
+    height: 46px;
+    border-radius: 7px;
+    object-fit: cover;
+    flex: none;
+    border: 1px solid var(--line);
+  }
+
+  .cap-del {
+    flex: none;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 13px;
+    padding: 2px 4px;
+    letter-spacing: 0;
+  }
+
+  .viv-acoes {
+    display: flex;
+    gap: 9px;
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+
+  .vazio {
+    text-align: center;
+    padding: 34px 18px;
+    color: var(--ink-soft);
+  }
+
+  .vazio p { margin: 0 0 6px; }
+
+  .vazio .frase {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+    margin-top: 14px;
+    line-height: 1.45;
+  }
+
+  /* ---------- abas ---------- */
+
+  .bloco-ger {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 15px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .saida-cab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .grade-ger {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 9px;
+  }
+
+  .ger {
+    text-align: left;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 11px 12px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 14.5px;
+    line-height: 1.3;
+  }
+
+  .ger b {
+    display: block;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 17px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .ger small {
+    color: var(--ink-soft);
+    font-size: 12.5px;
+  }
+
+  .ger.interno { border-color: var(--warm); }
+
+  .btn-voltar {
+    background: none;
+    border: none;
+    padding: 0 0 6px;
+    color: var(--ink-soft);
+    font-family: "Roboto", sans-serif;
+    font-size: 13.5px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .saida-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+
+  .saida-item:last-child { border-bottom: none; }
+
+  .fala {
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  .fala.eu {
+    background: var(--brand);
+    color: #F7F3EE;
+    margin-left: 32px;
+  }
+
+  :root:not([data-theme="light"]) .fala.eu { color: #F7F3EE; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .fala.eu { background: #4B0082; }
+  }
+
+  :root[data-theme="dark"] .fala.eu { background: #4B0082; }
+
+  .fala.sistema {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    margin-right: 20px;
+  }
+
+  .tabs {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .tabs button {
+    background: none;
+    border: none;
+    border-radius: 0;
+    color: var(--tab-ink);
+    padding: 14px 8px;
+    font-size: 16px;
+    letter-spacing: .09em;
+    border-top: 3px solid transparent;
+    margin-top: -1px;
+  }
+
+  .tabs button[aria-current="true"] {
+    color: var(--tab-ink-on);
+    border-top-color: var(--tab-ink-on);
+  }
+
+  .diag {
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .diag summary {
+    cursor: pointer;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-size: 14px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .diag-linha {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .diag-linha strong {
+    color: var(--ink);
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .versao {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: .65;
+    margin: 0;
+    padding: 8px 16px 10px;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 82px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--ground);
+    font-size: 14.5px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    z-index: 20;
+    max-width: calc(100% - 32px);
+    text-align: center;
+  }
+
+  .aviso {
+    border-left: 3px solid var(--warm);
+    background: var(--surface-2);
+    padding: 11px 14px;
+    border-radius: 0 10px 10px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="shell">
+  <header class="top">
+    <svg class="orbit-bg" viewBox="60 90 320 320" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="9" opacity="0.85">
+        <path d="M157.428 289.426C201.08 361.031 265.76 401.221 301.896 379.192C338.031 357.163 331.938 281.258 288.287 209.652C244.635 138.047 179.955 97.8579 143.819 119.887C107.683 141.916 113.777 217.821 157.428 289.426Z"/>
+        <path d="M154.153 212.823C112.877 285.824 109.281 361.888 146.121 382.718C182.961 403.548 246.286 361.256 287.562 288.255C328.837 215.255 332.434 139.19 295.594 118.36C258.754 97.5303 195.429 139.823 154.153 212.823Z"/>
+        <path d="M257.869 186.003C185.053 144.403 109.005 140.469 88.0118 177.216C67.0184 213.963 109.029 277.475 181.846 319.075C254.662 360.675 330.71 364.609 351.703 327.862C372.696 291.115 330.686 227.603 257.869 186.003Z"/>
+        <path d="M181.563 183.133C109.004 225.18 67.3847 288.95 88.6039 325.567C109.823 362.184 185.845 357.782 258.404 315.735C330.963 273.687 372.582 209.917 351.363 173.301C330.144 136.684 254.122 141.086 181.563 183.133Z"/>
+      </g>
+    </svg>
+    <svg class="orbit" viewBox="60 90 320 320" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="13" opacity="0.9">
+        <path d="M157.428 289.426C201.08 361.031 265.76 401.221 301.896 379.192C338.031 357.163 331.938 281.258 288.287 209.652C244.635 138.047 179.955 97.8579 143.819 119.887C107.683 141.916 113.777 217.821 157.428 289.426Z"/>
+        <path d="M154.153 212.823C112.877 285.824 109.281 361.888 146.121 382.718C182.961 403.548 246.286 361.256 287.562 288.255C328.837 215.255 332.434 139.19 295.594 118.36C258.754 97.5303 195.429 139.823 154.153 212.823Z"/>
+        <path d="M257.869 186.003C185.053 144.403 109.005 140.469 88.0118 177.216C67.0184 213.963 109.029 277.475 181.846 319.075C254.662 360.675 330.71 364.609 351.703 327.862C372.696 291.115 330.686 227.603 257.869 186.003Z"/>
+        <path d="M181.563 183.133C109.004 225.18 67.3847 288.95 88.6039 325.567C109.823 362.184 185.845 357.782 258.404 315.735C330.963 273.687 372.582 209.917 351.363 173.301C330.144 136.684 254.122 141.086 181.563 183.133Z"/>
+      </g>
+    </svg>
+    <div class="wordmark">Bagagem<span>Repertório</span></div>
+    <div class="mala-chip" id="chip">na mala: 0</div>
+  </header>
+
+  <main>
+    <!-- ============ CAPTURAR ============ -->
+    <section class="view" id="view-capturar">
+      <div id="aviso-slot"></div>
+
+      <div>
+        <p class="eyebrow">Agora, na rua</p>
+        <h2 id="saudacao">O que aconteceu?</h2>
+      </div>
+
+      <div class="block">
+        <div>
+          <label class="field-label" for="texto">Solta aqui</label>
+          <textarea id="texto" placeholder="Três frases bastam. O que você viu, o que te pegou, e por quê." autocapitalize="sentences"></textarea>
+          <p class="helper">Se for mais fácil falar do que digitar, use o ditado do teclado. O texto entra igual.</p>
+        </div>
+
+        <div>
+          <label class="field-label" for="viv-select">Isso é de qual vivência?</label>
+          <select id="viv-select">
+            <option value="__nova__">Vivência nova</option>
+          </select>
+        </div>
+
+        <div id="nova-wrap">
+          <label class="field-label" for="viv-titulo">Nome da vivência nova</label>
+          <input type="text" id="viv-titulo" placeholder="Feira de Cantão, aula sobre Sociedade 5.0, jantar com o cliente" autocapitalize="sentences">
+          <p class="helper" id="slug-preview">A pasta no acervo vai se chamar: <strong>acervo/</strong></p>
+        </div>
+
+        <div class="anexo-strip" id="anexos">
+          <button type="button" class="btn-ghost btn-tiny" id="btn-foto">+ Foto</button>
+        </div>
+        <p class="helper" id="nota-fotos" hidden></p>
+        <input type="file" id="file-input" accept="image/*" multiple hidden>
+
+        <button type="button" class="btn-primary" id="btn-guardar">Guardar na mala</button>
+      </div>
+
+      <div class="puxada" id="puxada" hidden>
+        <p class="eyebrow" id="puxada-label">Puxando mais um detalhe</p>
+        <q id="puxada-texto">Pensando...</q>
+        <textarea id="puxada-resposta" placeholder="Responde em uma frase, ou pula." style="min-height:82px"></textarea>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btn-puxada-salvar">Anexar resposta</button>
+          <button type="button" class="btn-ghost" id="btn-puxada-pular">Pular</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ A MALA ============ -->
+    <section class="view" id="view-mala" hidden>
+      <div>
+        <p class="eyebrow">Esperando ser desfeita</p>
+        <h2>A mala</h2>
+        <p class="helper" style="margin-top:8px">Isto não é o acervo. É o que ainda não virou <strong>vivencia.md</strong>. Toque em <strong>Destilar</strong> para transformar as capturas em vivência estruturada.</p>
+      </div>
+      <div id="lista-mala"></div>
+
+      <details class="diag" id="diag">
+        <summary>Diagnóstico</summary>
+        <div id="diag-corpo"></div>
+        <div class="row" style="margin-top:12px">
+          <button type="button" class="btn-ghost btn-tiny" id="btn-diag-recarregar">Tentar de novo</button>
+          <button type="button" class="btn-ghost btn-tiny" id="btn-diag-copiar">Copiar diagnóstico</button>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============ UMA VIVÊNCIA ============ -->
+    <section class="view" id="view-destilar" hidden>
+      <div>
+        <button type="button" class="btn-voltar" id="btn-dest-voltar">voltar ao acervo</button>
+        <h2 id="dest-titulo">Vivência</h2>
+        <p class="helper" style="margin-top:8px" id="dest-sub"></p>
+      </div>
+
+      <div class="bloco-ger">
+        <p class="eyebrow">1. A base</p>
+        <p class="helper">A destilação é o que todos os outputs leem. Sem ela, o resto sai raso.</p>
+        <button type="button" class="btn-primary" id="btn-destilar">Destilar</button>
+      </div>
+
+      <div class="bloco-ger">
+        <p class="eyebrow">2. Gerar a partir dela</p>
+        <div class="grade-ger" id="grade-geradores"></div>
+      </div>
+
+      <p class="helper" id="dest-status" hidden></p>
+
+      <div class="bloco-ger" id="painel-saida">
+        <div class="saida-cab">
+          <p class="eyebrow" id="saida-rotulo">Resultado</p>
+          <button type="button" class="btn-tiny btn-ghost" id="btn-parar" hidden>Parar</button>
+        </div>
+        <textarea id="dest-texto" style="min-height:380px;font-size:14px" placeholder="Toque em Destilar ou num gerador. O resultado aparece aqui e pode ser editado antes de guardar."></textarea>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btn-dest-salvar">Guardar</button>
+          <button type="button" class="btn-ghost" id="btn-dest-copiar">Copiar</button>
+          <button type="button" class="btn-ghost" id="btn-dest-baixar" hidden>Baixar .md</button>
+        </div>
+      </div>
+
+      <div class="bloco-ger">
+        <p class="eyebrow">Já gerado</p>
+        <div id="lista-saidas"></div>
+      </div>
+    </section>
+
+    <!-- ============ PERGUNTAR ============ -->
+    <section class="view" id="view-perguntar" hidden>
+      <div>
+        <p class="eyebrow">Sobre tudo que você viveu</p>
+        <h2>Perguntar</h2>
+        <p class="helper" style="margin-top:8px" id="perg-base">Carregando o acervo...</p>
+      </div>
+
+      <div id="conversa"></div>
+
+      <div class="bloco-ger">
+        <textarea id="perg-texto" style="min-height:90px" placeholder="O que Shenzhen me ensinou que serve pra indústria? Que vivência eu tenho sobre privacidade?"></textarea>
+        <div class="row">
+          <button type="button" class="btn-primary" id="btn-perguntar">Perguntar</button>
+          <button type="button" class="btn-ghost" id="btn-limpar-conversa">Limpar conversa</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p class="versao" id="versao">Bagagem de Mão v6</p>
+
+  <nav class="tabs">
+    <button type="button" id="tab-capturar" aria-current="true">Capturar</button>
+    <button type="button" id="tab-mala">Acervo</button>
+    <button type="button" id="tab-perguntar">Perguntar</button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DRAFT_KEY = "bagagem.rascunho";
+  var state = {
+    db: null,
+    assets: null,
+    sample: null,
+    downloads: null,
+    vivencias: [],
+    capturas: {},
+    anexos: [],
+    view: "capturar",
+    ultimaCaptura: null,
+    destilando: null,
+    abortar: null,
+    acervo: null,
+    dbPronto: null
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------------- diagnóstico ----------------
+     Quando algo não aparece, a tela precisa dizer o que ela viu, em vez de
+     deixar a gente adivinhar por mensagem trocada. */
+  var diag = {
+    linhas: [],
+    set: function (chave, valor) {
+      var achou = false;
+      this.linhas.forEach(function (l) { if (l[0] === chave) { l[1] = valor; achou = true; } });
+      if (!achou) this.linhas.push([chave, valor]);
+      this.pintar();
+    },
+    pintar: function () {
+      var alvo = $("diag-corpo");
+      if (!alvo) return;
+      alvo.innerHTML = "";
+      this.linhas.forEach(function (l) {
+        var li = document.createElement("div");
+        li.className = "diag-linha";
+        var k = document.createElement("span");
+        k.textContent = l[0];
+        var v = document.createElement("strong");
+        v.textContent = l[1];
+        li.appendChild(k);
+        li.appendChild(v);
+        alvo.appendChild(li);
+      });
+    }
+  };
+
+  /* ---------------- utilidades ---------------- */
+
+  function slugify(s) {
+    return (s || "")
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 42) || "sem-titulo";
+  }
+
+  function pastaDe(titulo, dataIso) {
+    var d = dataIso ? new Date(dataIso) : new Date();
+    var ano = d.getFullYear();
+    var mes = String(d.getMonth() + 1).padStart(2, "0");
+    return ano + "-" + mes + "-" + slugify(titulo);
+  }
+
+  function diasDesde(iso) {
+    if (!iso) return 0;
+    return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  }
+
+  function hhmm(iso) {
+    var d = new Date(iso);
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  }
+
+  function diaMes(iso) {
+    var d = new Date(iso);
+    return String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+  }
+
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3200);
+  }
+
+  function aviso(texto) {
+    $("aviso-slot").innerHTML = "";
+    var d = document.createElement("div");
+    d.className = "aviso";
+    d.textContent = texto;
+    $("aviso-slot").appendChild(d);
+  }
+
+  /* ---------------- rascunho local ---------------- */
+
+  function salvarRascunho() {
+    try { localStorage.setItem(DRAFT_KEY, $("texto").value); } catch (e) { /* sem storage, tudo bem */ }
+  }
+
+  function lerRascunho() {
+    try { return localStorage.getItem(DRAFT_KEY) || ""; } catch (e) { return ""; }
+  }
+
+  function limparRascunho() {
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* idem */ }
+  }
+
+  /* ---------------- navegação ---------------- */
+
+  function mostrar(v) {
+    state.view = v;
+    $("view-capturar").hidden = v !== "capturar";
+    $("view-mala").hidden = v !== "mala";
+    $("view-destilar").hidden = v !== "destilar";
+    $("view-perguntar").hidden = v !== "perguntar";
+    $("tab-capturar").setAttribute("aria-current", String(v === "capturar"));
+    // A tela de uma vivência é subtela do acervo, então a aba continua marcada.
+    $("tab-mala").setAttribute("aria-current", String(v === "mala" || v === "destilar"));
+    $("tab-perguntar").setAttribute("aria-current", String(v === "perguntar"));
+    if (v === "mala") carregarMala();
+    if (v === "perguntar") atualizarBasePergunta();
+    window.scrollTo(0, 0);
+  }
+
+  $("tab-capturar").addEventListener("click", function () { mostrar("capturar"); });
+  $("tab-mala").addEventListener("click", function () { mostrar("mala"); });
+  $("tab-perguntar").addEventListener("click", function () { mostrar("perguntar"); });
+
+  $("btn-diag-recarregar").addEventListener("click", carregarMala);
+
+  $("btn-diag-copiar").addEventListener("click", function () {
+    var txt = diag.linhas.map(function (l) { return l[0] + ": " + l[1]; }).join("\n");
+    copiar(txt).then(function () { toast("Diagnóstico copiado. Cola pro Claude."); },
+                     function () { toast("Não consegui copiar. Tira um print."); });
+  });
+
+  /* ---------------- formulário ---------------- */
+
+  function atualizarNovaWrap() {
+    var nova = $("viv-select").value === "__nova__";
+    $("nova-wrap").hidden = !nova;
+    atualizarSlugPreview();
+  }
+
+  function atualizarSlugPreview() {
+    var t = $("viv-titulo").value.trim();
+    $("slug-preview").innerHTML = "A pasta no acervo vai se chamar: <strong>acervo/" +
+      (t ? pastaDe(t) : "aaaa-mm-...") + "</strong>";
+  }
+
+  $("viv-select").addEventListener("change", atualizarNovaWrap);
+  $("viv-titulo").addEventListener("input", atualizarSlugPreview);
+  $("texto").addEventListener("input", salvarRascunho);
+
+  /* ---------------- fotos ---------------- */
+
+  $("btn-foto").addEventListener("click", function () { $("file-input").click(); });
+
+  $("file-input").addEventListener("change", function (ev) {
+    var arquivos = Array.prototype.slice.call(ev.target.files || []);
+    arquivos.forEach(adicionarFoto);
+    ev.target.value = "";
+  });
+
+  function redimensionar(file) {
+    return new Promise(function (resolve) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var max = 1600;
+        var escala = Math.min(1, max / Math.max(img.width, img.height));
+        var w = Math.round(img.width * escala);
+        var h = Math.round(img.height * escala);
+        var cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        cv.toBlob(function (blob) { resolve(blob || file); }, "image/jpeg", 0.85);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
+
+  function adicionarFoto(file) {
+    if (!/^image\//.test(file.type)) return;
+    redimensionar(file).then(function (blob) {
+      var item = { blob: blob, url: URL.createObjectURL(blob) };
+      state.anexos.push(item);
+      renderAnexos();
+    });
+  }
+
+  function renderAnexos() {
+    var strip = $("anexos");
+    strip.querySelectorAll(".thumb").forEach(function (n) { n.remove(); });
+    state.anexos.forEach(function (item, i) {
+      var d = document.createElement("div");
+      d.className = "thumb";
+      var img = document.createElement("img");
+      img.src = item.url;
+      img.alt = "Foto " + (i + 1);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "×";
+      b.setAttribute("aria-label", "Tirar foto " + (i + 1));
+      b.addEventListener("click", function () {
+        URL.revokeObjectURL(item.url);
+        state.anexos.splice(i, 1);
+        renderAnexos();
+      });
+      d.appendChild(img);
+      d.appendChild(b);
+      strip.insertBefore(d, $("btn-foto"));
+    });
+
+    // O CLAUDE.md pede até 10 fotos por vivência, descritas uma vez. Passar
+    // muito disso encarece a destilação depois.
+    var nota = $("nota-fotos");
+    if (state.anexos.length > 10) {
+      nota.hidden = false;
+      nota.textContent = state.anexos.length + " fotos. O sistema trabalha melhor com até 10 por vivência, " +
+        "porque cada uma é descrita na destilação. Vale escolher as que contam a história.";
+    } else {
+      nota.hidden = true;
+    }
+  }
+
+  /* ---------------- guardar ---------------- */
+
+  $("btn-guardar").addEventListener("click", guardar);
+
+  function guardar() {
+    var texto = $("texto").value.trim();
+    if (!texto && state.anexos.length === 0) {
+      toast("Escreve alguma coisa ou anexa uma foto.");
+      $("texto").focus();
+      return;
+    }
+    if (!state.db) {
+      toast("Sem conexão com o guardado. Copie o texto antes de fechar.");
+      return;
+    }
+
+    var sel = $("viv-select").value;
+    var pasta, titulo;
+
+    if (sel === "__nova__") {
+      titulo = $("viv-titulo").value.trim();
+      if (!titulo) {
+        toast("Dá um nome pra essa vivência.");
+        $("viv-titulo").focus();
+        return;
+      }
+      pasta = pastaDe(titulo);
+    } else {
+      pasta = sel;
+      var achou = state.vivencias.find(function (v) { return v.pasta === pasta; });
+      titulo = achou ? achou.titulo : pasta;
+    }
+
+    var btn = $("btn-guardar");
+    btn.disabled = true;
+    btn.textContent = "Guardando...";
+
+    subirAnexos()
+      .then(function (fotos) {
+        var ref = state.db.doc("vivencias/" + pasta);
+        return ref.get()
+          .then(function (snap) {
+            // set substitui o documento inteiro, então só na criação.
+            if (snap.exists) return;
+            return ref.set({
+              titulo: titulo,
+              pasta: pasta,
+              status: "na-mala",
+              criadaEm: new Date().toISOString()
+            });
+          })
+        .then(function () {
+          return state.db.collection("vivencias/" + pasta + "/capturas").add({
+            texto: texto,
+            fotos: fotos,
+            criadaEm: new Date().toISOString(),
+            origem: "celular"
+          });
+        });
+      })
+      .then(function () {
+        state.anexos.forEach(function (a) { URL.revokeObjectURL(a.url); });
+        state.anexos = [];
+        renderAnexos();
+        state.ultimaCaptura = { pasta: pasta, titulo: titulo, texto: texto };
+        $("texto").value = "";
+        limparRascunho();
+        $("viv-titulo").value = "";
+        toast("Guardado em " + pasta);
+        if (texto.length > 40) pedirPuxada(texto, titulo);
+      })
+      .catch(function (e) {
+        toast(mensagemErro(e));
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = "Guardar na mala";
+      });
+  }
+
+  function mensagemErro(e) {
+    var c = e && e.code;
+    if (c === "quota_exceeded") return "A mala encheu. Desfaça algumas vivências primeiro.";
+    if (c === "resource_exhausted") return "Muita coisa de uma vez. Espera uns segundos.";
+    if (c === "revoked" || c === "not_granted") return "O acesso ao guardado caiu. Recarregue a página.";
+    return "Não consegui guardar. Copie o texto antes de fechar.";
+  }
+
+  function subirAnexos() {
+    if (state.anexos.length === 0) return Promise.resolve([]);
+    if (!state.assets) {
+      toast("Não consegui anexar as fotos. O texto vai sozinho.");
+      return Promise.resolve([]);
+    }
+    return Promise.all(state.anexos.map(function (a) {
+      return state.assets.upload(a.blob)
+        .then(function (r) { return { id: r.id, url: r.url }; })
+        .catch(function () { return null; });
+    })).then(function (r) { return r.filter(Boolean); });
+  }
+
+  /* ---------------- pergunta de aprofundamento ---------------- */
+
+  function pedirPuxada(texto, titulo) {
+    if (!state.sample) return;
+    $("puxada").hidden = false;
+    $("puxada-texto").textContent = "Pensando...";
+    $("puxada-resposta").value = "";
+    $("puxada-label").textContent = "Puxando mais um detalhe";
+
+    var prompt = [
+      "Você ajuda a Nay a capturar repertório de uma vivência no calor do momento.",
+      "Ela acabou de registrar isto sobre a vivência \"" + titulo + "\":",
+      "",
+      texto,
+      "",
+      "Faça UMA única pergunta curta que puxe o detalhe concreto que essa nota ainda não tem:",
+      "uma cena, um número, uma fala que ela ouviu, um cheiro, uma reação de alguém, um contraste.",
+      "A pergunta tem que ser específica desta nota. Se serviria para qualquer outra vivência, está errada.",
+      "Nunca pergunte 'como você se sentiu' nem 'o que você aprendeu'.",
+      "Escreva em português do Brasil, no máximo 18 palavras, sem travessão, sem introdução.",
+      "Responda só com a pergunta."
+    ].join("\n");
+
+    state.sample(prompt, { modelTier: "quick" })
+      .then(function (r) {
+        $("puxada-texto").textContent = (r.text || "").trim().replace(/^["“”']|["“”']$/g, "");
+      })
+      .catch(function (e) {
+        if (e && e.code === "not_granted") { $("puxada").hidden = true; return; }
+        $("puxada-label").textContent = "Sem a pergunta agora";
+        $("puxada-texto").textContent = "Que detalhe concreto dessa cena você não escreveu ainda?";
+      });
+  }
+
+  $("btn-puxada-pular").addEventListener("click", function () { $("puxada").hidden = true; });
+
+  $("btn-puxada-salvar").addEventListener("click", function () {
+    var resposta = $("puxada-resposta").value.trim();
+    var ctx = state.ultimaCaptura;
+    if (!resposta || !ctx || !state.db) { $("puxada").hidden = true; return; }
+    var pergunta = $("puxada-texto").textContent;
+    state.db.collection("vivencias/" + ctx.pasta + "/capturas").add({
+      texto: pergunta + "\n" + resposta,
+      fotos: [],
+      criadaEm: new Date().toISOString(),
+      origem: "aprofundamento"
+    }).then(function () {
+      toast("Anexado.");
+    }).catch(function (e) {
+      toast(mensagemErro(e));
+    }).finally(function () {
+      $("puxada").hidden = true;
+    });
+  });
+
+  /* ---------------- a mala ---------------- */
+
+  function falhaMala(msg) {
+    var alvo = $("lista-mala");
+    alvo.innerHTML = "";
+    var p = document.createElement("div");
+    p.className = "vazio";
+    p.innerHTML = "<p>Não consegui abrir a mala.</p>";
+    var d = document.createElement("p");
+    d.style.fontSize = "13px";
+    d.textContent = msg;
+    p.appendChild(d);
+    alvo.appendChild(p);
+  }
+
+  function carregarMala() {
+    // O banco chega por promise, sempre depois do primeiro desenho da página.
+    // Tocar em A mala antes disso caía num estado sem banco e não tentava de
+    // novo, então aqui a gente espera a promise em vez de olhar state.db.
+    if (!state.dbPronto) {
+      falhaMala("Esta página não está rodando dentro do Claude, então não tem onde guardar.");
+      return;
+    }
+
+    diag.set("clicou", "abriu a mala às " + hhmm(new Date().toISOString()));
+    $("lista-mala").innerHTML = "<div class=\"vazio\"><p>Abrindo a mala...</p></div>";
+
+    state.dbPronto.then(function (db) {
+      if (!db) {
+        diag.set("db", "indisponível");
+        falhaMala("O guardado não está disponível nesta visualização.");
+        return null;
+      }
+      diag.set("db", "conectado");
+      return db.collection("vivencias").limit(300).get()
+        .then(function (snap) { return { snap: snap, db: db }; });
+    }).then(function (r) {
+      if (!r) return null;
+      var snap = r.snap;
+      diag.set("vivencias lidas", String(snap.docs.length));
+      diag.set("origem", snap.metadata && snap.metadata.fromCache ? "cache local" : "servidor");
+
+      var todas = snap.docs.map(function (d) {
+        // O corpo devolvido pelo banco é congelado: clonar antes de acrescentar campo.
+        var data = Object.assign({}, d.data() || {});
+        data.pasta = data.pasta || d.id;
+        return data;
+      });
+      diag.set("titulos", todas.map(function (v) { return v.titulo || v.pasta; }).join(", ") || "nenhum");
+
+      var abertas = todas.filter(function (v) { return v.status !== "desfeita"; });
+      diag.set("na mala", String(abertas.length) + " de " + todas.length);
+
+      if (abertas.length === 0) { renderMala([]); return null; }
+
+      return Promise.all(abertas.map(function (v) {
+        return r.db.collection("vivencias/" + v.pasta + "/capturas").limit(300).get()
+          .then(function (s) {
+            var caps = s.docs.map(function (d) {
+              var data = Object.assign({}, d.data() || {});
+              data.__id = d.id;
+              return data;
+            });
+            caps.sort(function (a, b) {
+              return (a.criadaEm || "").localeCompare(b.criadaEm || "");
+            });
+            diag.set("capturas em " + v.pasta, String(caps.length));
+            return { viv: v, caps: caps };
+          })
+          .catch(function (e) {
+            // Uma vivência ilegível não pode esconder as outras, mas também
+            // não some em silêncio: entra na lista marcada.
+            diag.set("erro em " + v.pasta, (e && e.code) || "desconhecido");
+            return { viv: v, caps: [], erro: mensagemErro(e) };
+          });
+      })).then(renderMala);
+    }).catch(function (e) {
+      diag.set("erro ao ler", (e && e.code) || (e && e.message) || "desconhecido");
+      falhaMala(mensagemErro(e));
+    });
+  }
+
+  function renderMala(grupos) {
+    var alvo = $("lista-mala");
+    alvo.innerHTML = "";
+
+    var comCoisa = grupos.filter(function (g) { return g.caps.length > 0 || g.erro; });
+
+    if (comCoisa.length === 0) {
+      var vazio = document.createElement("div");
+      vazio.className = "vazio";
+      vazio.innerHTML =
+        "<p>A mala está vazia.</p>" +
+        "<p>Bom sinal. Quer dizer que você desfez tudo.</p>" +
+        "<p class=\"frase\">Use tecnologia para liberar tempo. Use o tempo pra viver experiências reais.</p>";
+      alvo.appendChild(vazio);
+      // Vazio pode ser verdade ou pode ser falha de leitura. Abre o diagnóstico
+      // para a tela dizer qual dos dois.
+      $("diag").open = true;
+      return;
+    }
+
+    $("diag").open = false;
+
+    function ultimoToque(g) {
+      if (!g.caps.length) return g.viv.criadaEm || "";
+      return g.caps[g.caps.length - 1].criadaEm || "";
+    }
+    comCoisa.sort(function (a, b) { return ultimoToque(b).localeCompare(ultimoToque(a)); });
+
+    comCoisa.forEach(function (g) {
+      alvo.appendChild(cartaoVivencia(g));
+    });
+  }
+
+  function cartaoVivencia(g) {
+    var card = document.createElement("article");
+    card.className = "viv";
+
+    var head = document.createElement("div");
+    head.className = "viv-head";
+
+    var h = document.createElement("h3");
+    h.className = "viv-titulo";
+    h.textContent = g.viv.titulo || g.viv.pasta;
+    head.appendChild(h);
+
+    var dias = diasDesde(g.caps.length ? g.caps[0].criadaEm : g.viv.criadaEm);
+    if (dias >= 2) {
+      var chip = document.createElement("span");
+      chip.className = "parado";
+      chip.textContent = "parada há " + dias + " dias";
+      head.appendChild(chip);
+    }
+
+    var slug = document.createElement("div");
+    slug.className = "viv-slug";
+    slug.style.flex = "1 0 100%";
+    slug.textContent = "acervo/" + g.viv.pasta + "  ·  " + g.caps.length + (g.caps.length === 1 ? " captura" : " capturas");
+    head.appendChild(slug);
+
+    card.appendChild(head);
+
+    if (g.erro) {
+      var erroBox = document.createElement("div");
+      erroBox.className = "aviso";
+      erroBox.style.margin = "0 16px 14px";
+      erroBox.textContent = "Não consegui ler as capturas desta vivência: " + g.erro;
+      card.appendChild(erroBox);
+    }
+
+    var ul = document.createElement("ul");
+    ul.className = "capturas";
+    g.caps.forEach(function (c) {
+      ul.appendChild(linhaCaptura(g.viv.pasta, c));
+    });
+    card.appendChild(ul);
+
+    var acoes = document.createElement("div");
+    acoes.className = "viv-acoes";
+
+    var bDest = document.createElement("button");
+    bDest.type = "button";
+    bDest.className = "btn-tiny";
+    bDest.style.background = "var(--action)";
+    bDest.style.color = "var(--action-ink)";
+    bDest.textContent = g.viv.destilacao ? "Ver destilação" : "Destilar";
+    bDest.disabled = g.caps.length === 0;
+    bDest.addEventListener("click", function () { abrirDestilacao(g); });
+    acoes.appendChild(bDest);
+
+    var bCopiar = document.createElement("button");
+    bCopiar.type = "button";
+    bCopiar.className = "btn-ghost btn-tiny";
+    bCopiar.textContent = "Copiar markdown";
+    bCopiar.addEventListener("click", function () {
+      var md = montarMarkdown(g);
+      copiar(md).then(function () { toast("Markdown copiado."); },
+                       function () { toast("Não consegui copiar aqui."); });
+    });
+    acoes.appendChild(bCopiar);
+
+    if (state.downloads) {
+      var bBaixar = document.createElement("button");
+      bBaixar.type = "button";
+      bBaixar.className = "btn-ghost btn-tiny";
+      bBaixar.textContent = "Baixar .md";
+      bBaixar.addEventListener("click", function () {
+        state.downloads.save({
+          filename: g.viv.pasta + "-bruto.md",
+          data: montarMarkdown(g)
+        }).catch(function () { toast("Download recusado."); });
+      });
+      acoes.appendChild(bBaixar);
+    }
+
+    var bFeito = document.createElement("button");
+    bFeito.type = "button";
+    bFeito.className = "btn-ghost btn-tiny";
+    bFeito.textContent = "Marcar como desfeita";
+    bFeito.addEventListener("click", function () {
+      if (!confirm("Marcar \"" + (g.viv.titulo || g.viv.pasta) + "\" como desfeita? Só faça isso depois de rodar /pos e conferir o vivencia.md.")) return;
+      state.db.doc("vivencias/" + g.viv.pasta).update({ status: "desfeita", desfeitaEm: new Date().toISOString() })
+        .then(function () { toast("Fora da mala."); carregarMala(); })
+        .catch(function (e) { toast(mensagemErro(e)); });
+    });
+    acoes.appendChild(bFeito);
+
+    card.appendChild(acoes);
+    return card;
+  }
+
+  function linhaCaptura(pasta, c) {
+    var li = document.createElement("li");
+    li.className = "cap";
+
+    var hora = document.createElement("span");
+    hora.className = "cap-hora";
+    hora.textContent = diasDesde(c.criadaEm) >= 1 ? diaMes(c.criadaEm) : hhmm(c.criadaEm);
+    li.appendChild(hora);
+
+    var corpo = document.createElement("div");
+    corpo.className = "cap-corpo";
+
+    if (c.texto) {
+      var p = document.createElement("p");
+      p.className = "cap-texto";
+      p.textContent = c.texto;
+      corpo.appendChild(p);
+
+      // Transcrição de voz fica longa. Mostra o começo e abre sob toque.
+      if (c.texto.length > 320) {
+        var abrir = document.createElement("button");
+        abrir.type = "button";
+        abrir.className = "cap-mais";
+        abrir.textContent = "ler tudo";
+        var alterna = function () {
+          var aberta = p.classList.toggle("aberta");
+          abrir.textContent = aberta ? "recolher" : "ler tudo";
+        };
+        abrir.addEventListener("click", alterna);
+        p.addEventListener("click", alterna);
+        corpo.appendChild(abrir);
+      }
+    }
+
+    // Uma captura pode trazer dezenas de fotos. Mostra algumas e conta o resto,
+    // para a linha não virar uma parede de miniaturas no celular.
+    var fotos = c.fotos || [];
+    if (fotos.length) {
+      var faixa = document.createElement("div");
+      faixa.className = "cap-fotos";
+      fotos.slice(0, 6).forEach(function (f) {
+        var img = document.createElement("img");
+        img.className = "cap-foto";
+        img.src = f.url || ("/_blob/" + f.id);
+        img.alt = "Foto anexada";
+        img.loading = "lazy";
+        faixa.appendChild(img);
+      });
+      if (fotos.length > 6) {
+        var mais = document.createElement("span");
+        mais.className = "cap-mais";
+        mais.textContent = "+" + (fotos.length - 6) + " fotos";
+        faixa.appendChild(mais);
+      }
+      corpo.appendChild(faixa);
+    }
+
+    li.appendChild(corpo);
+
+    var del = document.createElement("button");
+    del.type = "button";
+    del.className = "cap-del";
+    del.textContent = "apagar";
+    del.addEventListener("click", function () {
+      if (!confirm("Apagar esta captura de vez?")) return;
+      state.db.doc("vivencias/" + pasta + "/capturas/" + c.__id).delete()
+        .then(function () { carregarMala(); })
+        .catch(function (e) { toast(mensagemErro(e)); });
+    });
+    li.appendChild(del);
+
+    return li;
+  }
+
+  function montarMarkdown(g) {
+    var linhas = [];
+    linhas.push("# " + (g.viv.titulo || g.viv.pasta));
+    linhas.push("");
+    linhas.push("Pasta: `acervo/" + g.viv.pasta + "/`");
+    linhas.push("Capturado pelo celular, ainda não destilado.");
+    linhas.push("");
+    g.caps.forEach(function (c) {
+      var d = new Date(c.criadaEm);
+      linhas.push("## " + d.toLocaleDateString("pt-BR") + " " + hhmm(c.criadaEm) +
+        (c.origem === "aprofundamento" ? " (aprofundamento)" : ""));
+      linhas.push("");
+      if (c.texto) { linhas.push(c.texto); linhas.push(""); }
+      (c.fotos || []).forEach(function (f, i) {
+        linhas.push("Foto " + (i + 1) + ": `" + (f.id || f.url) + "`");
+      });
+      if ((c.fotos || []).length) linhas.push("");
+    });
+    return linhas.join("\n");
+  }
+
+  /* ---------------- destilar ---------------- */
+
+  var MODELO = [
+    "# [Título da vivência]",
+    "",
+    "- Data:",
+    "- Tipo: visita | evento | estudo",
+    "- Local ou fonte:",
+    "- Tags:",
+    "",
+    "## Em 5 linhas",
+    "O fato, a surpresa, o contraste, a tese que isso permite defender, o que muda.",
+    "",
+    "## O que vi (fatos)",
+    "",
+    "## O que me surpreendeu",
+    "",
+    "## Contraste e o que não funcionou",
+    "",
+    "## Falas originais",
+    "- [FALA] \"...\"",
+    "",
+    "## Ideias lapidadas",
+    "- [LAPIDADO] ...",
+    "- [SUGESTÃO] ...",
+    "",
+    "## Conexões",
+    "- Turma:",
+    "- Cliente:",
+    "- Palestra:",
+    "",
+    "## Perguntas em aberto",
+    "",
+    "## Material capturado",
+    "- Fotos:"
+  ].join("\n");
+
+  // Regras que valem para tudo que sai daqui. Vêm do CLAUDE.md.
+  var REGRAS = [
+    "Você escreve para a Nay, palestrante e fundadora da VIO FUTURO.",
+    "",
+    "REGRAS OBRIGATÓRIAS:",
+    "1. Tom dela: natural, inteligente, direto, humano, didático e estratégico. Parece escrito por ela.",
+    "2. NUNCA use travessão, nem curto nem longo. Use vírgula, ponto ou dois pontos.",
+    "3. Sem cara de IA: nada de 'vale ressaltar', 'no cenário atual', 'genuinamente', listas de três",
+    "   adjetivos, nem fecho motivacional.",
+    "4. Marcação de autoria: [FALA] só para o que ela disse literalmente na vivência, copiado sem retoque.",
+    "   [LAPIDADO] para versão melhorada de algo que ela disse. [SUGESTÃO] para ideia sua.",
+    "   Nunca apresente [SUGESTÃO] como pensamento dela.",
+    "5. Teste de genérico: se trocar 'Nay' por qualquer outra palestrante e o texto continuar funcionando,",
+    "   está genérico. Refaça puxando detalhe concreto da vivência.",
+    "6. Não invente fato, número, nome nem fala que não esteja na vivência. Faltou dado, diga que faltou."
+  ].join("\n");
+
+  var SIGILO_PUBLICO = [
+    "",
+    "CONFIDENCIALIDADE: este material é público. Nunca cite cliente pelo nome nem dado interno de cliente.",
+    "Se a vivência conectar com um cliente, use a ideia de forma anônima, como 'uma transportadora'."
+  ].join("\n");
+
+  var SIGILO_INTERNO = [
+    "",
+    "CONFIDENCIALIDADE: este material é interno, não vai para rede social nem palestra aberta."
+  ].join("\n");
+
+  var GERADORES = [
+    {
+      id: "frases", nome: "Frases", desc: "autorais, com a fala de origem", publico: true,
+      instrucao: "Extraia de 6 a 10 frases autorais desta vivência.\n" +
+        "Para cada uma: a frase lapidada pronta para palco ou post, e logo abaixo, entre parênteses,\n" +
+        "a fala original de onde ela saiu, copiada literal. Frase que não vier de fala dela entra como [SUGESTÃO].\n" +
+        "Frase autoral não sai do lugar, sai do olhar dela sobre o lugar. Nada de máxima de autoajuda."
+    },
+    {
+      id: "linkedin", nome: "LinkedIn", desc: "post no seu tom", publico: true,
+      instrucao: "Escreva um post de LinkedIn. Primeira linha é gancho concreto, uma cena ou um número da vivência,\n" +
+        "nunca pergunta retórica. Corpo de 4 a 7 parágrafos curtos que sustentam uma tese, não um relato de turista.\n" +
+        "Fecha com uma provocação real, sem 'e você, o que acha'. Sem hashtag genérica, no máximo três específicas.\n" +
+        "Depois do post, em bloco separado, um prompt de imagem para acompanhar."
+    },
+    {
+      id: "carrossel", nome: "Carrossel", desc: "roteiro card a card", publico: true,
+      instrucao: "Monte um roteiro de carrossel de 8 a 10 cards. Para cada card: número, o texto que vai nele\n" +
+        "(curto, cabe na tela) e, em itálico, a orientação visual. Card 1 é gancho, o último é fecho com tese.\n" +
+        "Cada card avança o argumento, nada de repetir a mesma ideia com outras palavras."
+    },
+    {
+      id: "instagram", nome: "Instagram", desc: "nos 3 perfis", publico: true,
+      instrucao: "Roteie esta vivência nos três Instagrams dela: o pessoal de palestrante, o da VIO Futuro,\n" +
+        "e o Experiência Mês a Mês. Para cada perfil: o ângulo que faz sentido ali, o formato sugerido\n" +
+        "(reels, carrossel, foto única), a legenda pronta e o que capturar se faltar imagem.\n" +
+        "Se a vivência não servir para algum dos perfis, diga isso em vez de forçar."
+    },
+    {
+      id: "palestra", nome: "Palestra", desc: "história estruturada", publico: true,
+      instrucao: "Escreva um trecho de palestra de 4 a 6 minutos com esta vivência.\n" +
+        "Estruture como história: a cena de entrada, a tensão, a virada, a tese que fica.\n" +
+        "Marque onde ela deve pausar e onde a plateia deve rir ou travar.\n" +
+        "Diga no fim em que momento da palestra esse bloco encaixa e o que ele prepara."
+    },
+    {
+      id: "aula", nome: "Aula", desc: "conteúdo e dinâmica", publico: false,
+      instrucao: "Monte um bloco de aula com esta vivência: o conceito que ela ilustra, como contar o caso,\n" +
+        "dois exemplos de aplicação no contexto brasileiro, uma dinâmica de sala com tempo estimado,\n" +
+        "e três perguntas de discussão que não têm resposta óbvia.\n" +
+        "Não existe ficha de turma preenchida ainda, então diga o que precisaria saber da turma para adaptar."
+    },
+    {
+      id: "cliente", nome: "Cliente", desc: "insight aplicado, interno", publico: false,
+      instrucao: "Escreva de 3 a 5 insights desta vivência aplicados ao negócio do cliente citado nas conexões\n" +
+        "da vivência. Para cada insight: o que foi visto, o que isso significa para ele, e o que dá para fazer\n" +
+        "na segunda-feira de manhã, concreto, não recomendação genérica.\n" +
+        "Feche com a pergunta que ela deve levar para a próxima reunião com ele.\n" +
+        "Se a vivência não nomear cliente nenhum, diga isso e pare."
+    }
+  ];
+
+  function promptDestilacao(g, bruto) {
+    return [
+      "Você é o sistema Bagagem, da Nay. Sua tarefa é destilar uma vivência bruta no arquivo vivencia.md,",
+      "que é a peça mais importante do acervo dela. Devolva SÓ o markdown, sem comentário antes ou depois.",
+      "",
+      "REGRAS DE ESCRITA, todas obrigatórias:",
+      "1. Tom da Nay: natural, inteligente, direto, humano, didático e estratégico. Parece escrito por ela.",
+      "2. NUNCA use travessão. Nem o curto nem o longo. Use vírgula, ponto ou dois pontos.",
+      "3. Sem cara de IA: nada de 'vale ressaltar', 'no cenário atual', 'genuinamente', listas de três",
+      "   adjetivos, nem conclusão motivacional.",
+      "4. Marcação de autoria, sagrada:",
+      "   [FALA] só para o que ela disse literalmente no material bruto, copiado sem retoque.",
+      "   [LAPIDADO] versão melhorada de algo que ela de fato disse.",
+      "   [SUGESTÃO] ideia sua. Nunca apresente [SUGESTÃO] como pensamento dela.",
+      "5. Teste de genérico: se trocar 'Nay' por qualquer outra palestrante e o texto continuar funcionando,",
+      "   está genérico. Refaça puxando detalhe concreto do material bruto.",
+      "6. Em 'Contraste e o que não funcionou', procure de verdade. Sem isso o texto vira propaganda do lugar.",
+      "   Se o material não trouxer contraste, escreva que não apareceu e transforme isso em pergunta em aberto.",
+      "7. Não invente fato, número, nome nem fala que não esteja no bruto. Faltou informação, isso vira",
+      "   linha em 'Perguntas em aberto'.",
+      "",
+      "MODELO a seguir na estrutura, preenchido com o conteúdo real:",
+      MODELO,
+      "",
+      "Depois do markdown do modelo, acrescente duas seções finais:",
+      "",
+      "## 3 perguntas de aprofundamento",
+      "Perguntas que puxam opinião, não descrição. Do tipo 'o que isso contradiz no que você falava antes'.",
+      "",
+      "## 3 outputs mais fortes",
+      "Uma linha cada: qual formato, para quem, por quê.",
+      "",
+      "DADOS DA VIVÊNCIA",
+      "Título: " + (g.viv.titulo || g.viv.pasta),
+      "Pasta: acervo/" + g.viv.pasta,
+      "Fotos capturadas: " + g.caps.reduce(function (n, c) { return n + ((c.fotos || []).length); }, 0),
+      "",
+      "MATERIAL BRUTO, transcrito por voz no celular, com os erros de ditado que isso traz:",
+      bruto
+    ].join("\n");
+  }
+
+  function abrirDestilacao(g) {
+    state.destilando = g;
+    mostrar("destilar");
+    $("dest-titulo").textContent = g.viv.titulo || g.viv.pasta;
+    var totalFotos = g.caps.reduce(function (n, c) { return n + ((c.fotos || []).length); }, 0);
+    $("dest-sub").textContent = "acervo/" + g.viv.pasta + "  ·  " + g.caps.length +
+      (g.caps.length === 1 ? " captura" : " capturas") +
+      (totalFotos ? "  ·  " + totalFotos + " fotos" : "");
+    $("dest-texto").value = g.viv.destilacao || "";
+    $("dest-texto").dataset.tipo = "destilacao";
+    marcarLimpo();
+    $("saida-rotulo").textContent = g.viv.destilacao ? "Destilação guardada" : "Resultado";
+    $("btn-destilar").textContent = g.viv.destilacao ? "Destilar de novo" : "Destilar";
+    $("btn-dest-baixar").hidden = !state.downloads;
+    $("dest-status").hidden = true;
+    renderGeradores();
+    carregarSaidas(g);
+  }
+
+  function destilar() {
+    var g = state.destilando;
+    if (!g) return;
+    if (!state.sample) {
+      status("A destilação precisa do Claude e ele não está disponível nesta tela. Use Copiar markdown na mala e rode /pos.");
+      return;
+    }
+    if (painelSujo() && !confirm("O que está no painel ainda não foi guardado. Substituir?")) return;
+
+    var bruto = g.caps.map(function (c) {
+      var d = new Date(c.criadaEm);
+      return "[" + d.toLocaleDateString("pt-BR") + " " + hhmm(c.criadaEm) +
+        (c.origem === "aprofundamento" ? ", resposta a pergunta de aprofundamento" : "") + "]\n" + (c.texto || "");
+    }).join("\n\n");
+
+    var btn = $("btn-destilar");
+    btn.disabled = true;
+    btn.textContent = "Destilando...";
+    rodarSample(promptDestilacao(g, bruto), "Destilação", "destilacao").finally(function () {
+      btn.disabled = false;
+      btn.textContent = "Destilar de novo";
+    });
+  }
+
+  function status(msg) {
+    $("dest-status").hidden = false;
+    $("dest-status").textContent = msg;
+  }
+
+  /* ---------------- geradores ---------------- */
+
+  function renderGeradores() {
+    var grade = $("grade-geradores");
+    grade.innerHTML = "";
+    GERADORES.forEach(function (ger) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "ger" + (ger.publico ? "" : " interno");
+      b.innerHTML = "";
+      var t = document.createElement("b");
+      t.textContent = ger.nome;
+      var d = document.createElement("small");
+      d.textContent = ger.desc + (ger.publico ? "" : " · interno");
+      b.appendChild(t);
+      b.appendChild(d);
+      b.addEventListener("click", function () { gerar(ger); });
+      grade.appendChild(b);
+    });
+  }
+
+  function gerar(ger) {
+    var g = state.destilando;
+    if (!g) return;
+    if (!state.sample) { status("O Claude não está disponível nesta tela."); return; }
+
+    var base = ($("dest-texto").dataset.tipo === "destilacao" && $("dest-texto").value.trim())
+      ? $("dest-texto").value.trim()
+      : (g.viv.destilacao || "");
+
+    if (!base) {
+      status("Destile primeiro. Todo gerador lê a destilação, não o áudio cru.");
+      return;
+    }
+    if (painelSujo() && !confirm("O que está no painel ainda não foi guardado. Substituir?")) return;
+
+    var prompt = [
+      REGRAS,
+      ger.publico ? SIGILO_PUBLICO : SIGILO_INTERNO,
+      "",
+      "TAREFA",
+      ger.instrucao,
+      "",
+      "VIVÊNCIA (já destilada, esta é a fonte, não invente nada fora dela):",
+      base
+    ].join("\n");
+
+    rodarSample(prompt, ger.nome, ger.id);
+  }
+
+  // Painel sujo é texto gerado que ainda não foi guardado em lugar nenhum.
+  function painelSujo() { return $("dest-texto").dataset.sujo === "1"; }
+  function marcarLimpo() { $("dest-texto").dataset.sujo = "0"; }
+
+  $("dest-texto").addEventListener("input", function () { this.dataset.sujo = "1"; });
+
+  function rodarSample(prompt, rotulo, tipo) {
+    var area = $("dest-texto");
+    area.value = "";
+    area.dataset.tipo = tipo;
+    $("saida-rotulo").textContent = rotulo;
+    status("Escrevendo. Pode levar um minuto.");
+
+    state.abortar = new AbortController();
+    $("btn-parar").hidden = false;
+
+    return state.sample(prompt, {
+      modelTier: "complex",
+      signal: state.abortar.signal,
+      onText: function (e) { area.value = e.text; }
+    }).then(function (r) {
+      area.value = (r.text || "").trim();
+      area.dataset.sujo = "1";
+      status(r.truncated ? "Veio cortado por tamanho. Guarde o que serve." : "Pronto. Ajuste o que não soar como você e guarde.");
+    }).catch(function (e) {
+      var c = e && e.code;
+      if (e && e.text) area.value = e.text;
+      if (c === "cancelled") status("Parado.");
+      else if (c === "not_granted") status("Você recusou o acesso ao Claude. Recarregue para escolher de novo.");
+      else if (c === "rate_limited") status("Muitas chamadas seguidas. Espere um minuto.");
+      else status("Não consegui gerar agora (" + c + ").");
+    }).finally(function () {
+      $("btn-parar").hidden = true;
+      state.abortar = null;
+    });
+  }
+
+  $("btn-parar").addEventListener("click", function () {
+    if (state.abortar) state.abortar.abort();
+  });
+
+  /* ---------------- saídas guardadas ---------------- */
+
+  function carregarSaidas(g) {
+    var alvo = $("lista-saidas");
+    alvo.innerHTML = "<p class=\"helper\">Carregando...</p>";
+    if (!state.db) { alvo.innerHTML = ""; return; }
+
+    state.db.collection("vivencias/" + g.viv.pasta + "/saidas").limit(100).get()
+      .then(function (snap) {
+        alvo.innerHTML = "";
+        if (!snap.docs.length) {
+          alvo.innerHTML = "<p class=\"helper\">Nada gerado ainda a partir desta vivência.</p>";
+          return;
+        }
+        snap.docs.map(function (d) {
+          var o = Object.assign({}, d.data() || {});
+          o.__id = d.id;
+          return o;
+        }).sort(function (a, b) {
+          return (b.criadaEm || "").localeCompare(a.criadaEm || "");
+        }).forEach(function (o) {
+          var li = document.createElement("div");
+          li.className = "saida-item";
+          var nome = document.createElement("span");
+          nome.textContent = o.rotulo + "  ·  " + diaMes(o.criadaEm);
+          var abrir = document.createElement("button");
+          abrir.type = "button";
+          abrir.className = "btn-tiny btn-ghost";
+          abrir.textContent = "abrir";
+          abrir.addEventListener("click", function () {
+            $("dest-texto").value = o.texto || "";
+            $("dest-texto").dataset.tipo = o.tipo || "";
+            $("saida-rotulo").textContent = o.rotulo;
+            marcarLimpo();
+            status("Guardado em " + diaMes(o.criadaEm) + ".");
+            $("painel-saida").scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          li.appendChild(nome);
+          li.appendChild(abrir);
+          alvo.appendChild(li);
+        });
+      })
+      .catch(function () { alvo.innerHTML = "<p class=\"helper\">Não consegui ler o que já foi gerado.</p>"; });
+  }
+
+  /* ---------------- perguntar ---------------- */
+
+  var conversa = [];
+
+  function montarAcervo() {
+    if (!state.db) return Promise.resolve({ texto: "", n: 0 });
+    return state.db.collection("vivencias").limit(300).get().then(function (snap) {
+      var partes = [];
+      var n = 0;
+      snap.docs.forEach(function (d) {
+        var v = d.data() || {};
+        if (!v.destilacao) return;
+        n++;
+        partes.push("===== VIVÊNCIA: " + (v.titulo || d.id) + " (pasta " + d.id + ") =====\n" + v.destilacao);
+      });
+      return { texto: partes.join("\n\n"), n: n };
+    }).catch(function () { return { texto: "", n: 0 }; });
+  }
+
+  function atualizarBasePergunta() {
+    montarAcervo().then(function (a) {
+      state.acervo = a;
+      $("perg-base").textContent = a.n === 0
+        ? "Nenhuma vivência destilada ainda. Destile uma no Acervo e ela passa a responder aqui."
+        : "Respondendo a partir de " + a.n + (a.n === 1 ? " vivência destilada." : " vivências destiladas.") +
+          " Se não tiver vivido sobre o assunto, ele diz isso em vez de inventar.";
+    });
+  }
+
+  function bolha(quem, texto) {
+    var d = document.createElement("div");
+    d.className = "fala " + quem;
+    d.textContent = texto;
+    $("conversa").appendChild(d);
+    d.scrollIntoView({ behavior: "smooth", block: "end" });
+    return d;
+  }
+
+  function perguntar() {
+    var q = $("perg-texto").value.trim();
+    if (!q) return;
+    if (!state.sample) { bolha("sistema", "O Claude não está disponível nesta tela."); return; }
+
+    var acervo = state.acervo || { texto: "", n: 0 };
+    bolha("eu", q);
+    $("perg-texto").value = "";
+    var resp = bolha("sistema", "Procurando no acervo...");
+
+    var sistema = [
+      REGRAS,
+      "",
+      "Você responde perguntas da Nay usando SÓ o acervo abaixo, que é tudo que ela viveu e registrou.",
+      "Regra central: o acervo é a fonte da verdade. Se não houver vivência sobre o assunto perguntado,",
+      "diga isso com todas as letras em vez de completar com conhecimento genérico.",
+      "Sempre diga de qual vivência veio cada coisa que você afirmar.",
+      "Responda curto e direto. Se a pergunta pedir material pronto, mande para o gerador certo no Acervo.",
+      "",
+      acervo.n === 0 ? "ACERVO: vazio, nenhuma vivência destilada ainda." : "ACERVO:\n" + acervo.texto
+    ].join("\n");
+
+    // A primeira mensagem carrega o acervo inteiro; as seguintes só a pergunta,
+    // para os turnos alternarem user e assistant como a chamada exige.
+    var primeira = { role: "user", content: sistema + "\n\nPERGUNTA: " + q };
+    var turnos = conversa.length === 0
+      ? [primeira]
+      : conversa.concat([{ role: "user", content: q }]);
+
+    state.sample(turnos, {
+      modelTier: "complex",
+      cache: false,
+      onText: function (e) { resp.textContent = e.text; }
+    }).then(function (r) {
+      resp.textContent = (r.text || "").trim();
+      conversa.push(conversa.length === 0 ? primeira : { role: "user", content: q });
+      conversa.push({ role: "assistant", content: r.text || "" });
+    }).catch(function (e) {
+      var c = e && e.code;
+      if (e && e.text) { resp.textContent = e.text; return; }
+      resp.textContent = c === "rate_limited"
+        ? "Muitas perguntas seguidas. Espere um minuto."
+        : "Não consegui responder agora (" + c + ").";
+    });
+  }
+
+  $("btn-perguntar").addEventListener("click", perguntar);
+  $("btn-limpar-conversa").addEventListener("click", function () {
+    conversa = [];
+    $("conversa").innerHTML = "";
+  });
+
+  $("btn-destilar").addEventListener("click", destilar);
+  $("btn-dest-voltar").addEventListener("click", function () { mostrar("mala"); });
+
+  $("btn-dest-salvar").addEventListener("click", function () {
+    var g = state.destilando;
+    var txt = $("dest-texto").value.trim();
+    if (!g || !txt || !state.db) { toast("Não tem o que guardar."); return; }
+
+    var tipo = $("dest-texto").dataset.tipo || "";
+
+    // A destilação é a base da vivência e mora nela. Todo o resto é saída.
+    if (tipo === "destilacao") {
+      state.db.doc("vivencias/" + g.viv.pasta).update({
+        destilacao: txt,
+        destiladaEm: new Date().toISOString()
+      }).then(function () {
+        g.viv = Object.assign({}, g.viv, { destilacao: txt });
+        $("btn-destilar").textContent = "Destilar de novo";
+        marcarLimpo();
+        toast("Destilação guardada.");
+      }).catch(function (e) { toast(mensagemErro(e)); });
+      return;
+    }
+
+    state.db.collection("vivencias/" + g.viv.pasta + "/saidas").add({
+      tipo: tipo,
+      rotulo: $("saida-rotulo").textContent,
+      texto: txt,
+      criadaEm: new Date().toISOString()
+    }).then(function () {
+      toast("Guardado em Já gerado.");
+      marcarLimpo();
+      carregarSaidas(g);
+    }).catch(function (e) { toast(mensagemErro(e)); });
+  });
+
+  $("btn-dest-copiar").addEventListener("click", function () {
+    copiar($("dest-texto").value).then(
+      function () { toast("Copiado."); },
+      function () { toast("Não consegui copiar aqui. Selecione o texto à mão."); }
+    );
+  });
+
+  $("btn-dest-baixar").addEventListener("click", function () {
+    var g = state.destilando;
+    if (!g || !state.downloads) return;
+    state.downloads.save({ filename: g.viv.pasta + "-vivencia.md", data: $("dest-texto").value })
+      .catch(function () { toast("Download recusado."); });
+  });
+
+  function copiar(txt) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(txt);
+    }
+    return Promise.reject(new Error("sem clipboard"));
+  }
+
+  /* ---------------- boot ---------------- */
+
+  function renderSelect() {
+    var sel = $("viv-select");
+    var atual = sel.value;
+    sel.innerHTML = "";
+    var nova = document.createElement("option");
+    nova.value = "__nova__";
+    nova.textContent = "Vivência nova";
+    sel.appendChild(nova);
+
+    state.vivencias
+      .filter(function (v) { return v.status !== "desfeita"; })
+      .sort(function (a, b) { return (b.criadaEm || "").localeCompare(a.criadaEm || ""); })
+      .forEach(function (v) {
+        var o = document.createElement("option");
+        o.value = v.pasta;
+        o.textContent = v.titulo || v.pasta;
+        sel.appendChild(o);
+      });
+
+    if (atual && sel.querySelector('option[value="' + CSS.escape(atual) + '"]')) sel.value = atual;
+    atualizarNovaWrap();
+  }
+
+  function atualizarChip() {
+    var abertas = state.vivencias.filter(function (v) { return v.status !== "desfeita"; }).length;
+    $("chip").textContent = abertas === 0 ? "mala vazia" : "na mala: " + abertas;
+  }
+
+  function saudacao() {
+    var h = new Date().getHours();
+    if (h < 5) return "Ainda acordada?";
+    if (h < 12) return "O que aconteceu?";
+    if (h < 18) return "O que aconteceu?";
+    return "Como foi o dia?";
+  }
+
+  function iniciar() {
+    $("saudacao").textContent = saudacao();
+    $("texto").value = lerRascunho();
+    atualizarNovaWrap();
+
+    diag.set("versão", "v6");
+    diag.set("window.claude", (window.claude && window.claude.use) ? "presente" : "ausente");
+
+    if (!window.claude || !window.claude.use) {
+      aviso("Esta página só guarda de verdade quando aberta pelo link publicado do Claude. Aqui o que você escrever fica só nesta tela.");
+      return;
+    }
+
+    var t0 = Date.now();
+    state.dbPronto = window.claude.use("db");
+
+    state.dbPronto.then(function (db) {
+      diag.set("use(db) levou", (Date.now() - t0) + " ms");
+      if (!db) {
+        diag.set("db", "null, não disponível nesta visualização");
+        aviso("Não consegui abrir o guardado. Escreva mesmo assim e copie o texto antes de fechar.");
+        return;
+      }
+      state.db = db;
+      // Sem orderBy no servidor: a ordenação acontece aqui, então a lista não
+      // depende de a consulta ordenada dar certo para aparecer.
+      db.collection("vivencias").limit(300).onSnapshot(function (snap) {
+        state.vivencias = snap.docs.map(function (d) {
+          var data = Object.assign({}, d.data() || {});
+          data.pasta = data.pasta || d.id;
+          return data;
+        }).sort(function (a, b) {
+          return (b.criadaEm || "").localeCompare(a.criadaEm || "");
+        });
+        diag.set("inscrição ao vivo", snap.docs.length + " vivências");
+        renderSelect();
+        atualizarChip();
+        if (state.view === "mala") carregarMala();
+      }, function (e) {
+        diag.set("inscrição ao vivo", "falhou: " + (e && e.code));
+        aviso("A lista de vivências parou de atualizar sozinha (" + (e && e.code) + "). O que você guardar continua sendo salvo, e a aba A mala relê tudo ao abrir.");
+      });
+    });
+
+    window.claude.use("assets").then(function (a) {
+      state.assets = a;
+      $("btn-foto").hidden = !a;
+    });
+
+    window.claude.use("sample").then(function (s) { state.sample = s; });
+    window.claude.use("downloads").then(function (d) { state.downloads = d; });
+  }
+
+  iniciar();
+})();
+</script>
